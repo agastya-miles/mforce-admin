@@ -1,5 +1,5 @@
 var google = require('./login-google.js');
-var User = require('../models/user');
+var User = require('../models/user.model');
 
 module.exports = function(passport){
 

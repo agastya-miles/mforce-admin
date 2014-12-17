@@ -7,7 +7,7 @@ var test = require('unit.js')
 // Handlebars for Express
 var hbs = require('hbs');
 var path = require('path');
-var favicon = require('serve-favicon');
+// var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -56,6 +56,9 @@ initPassport(passport);
 
 var routes = require('./routes/index')(passport);
 app.use('/', routes);
+var dbRoutes = require('./routes/dbroutes.js');
+app.use('/', dbRoutes);
+
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

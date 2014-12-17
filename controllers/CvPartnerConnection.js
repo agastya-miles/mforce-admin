@@ -10,7 +10,8 @@ var options = {
     }
 
 };
-var CvPartnerConnection = {
+
+var cvPartnerConnection = {
     getUsers: function (done) {
         options.path = '/api/v1/users';
         http.request(options, function (response) {
@@ -20,9 +21,9 @@ var CvPartnerConnection = {
                 str += chunk;
             });
 
-            //the whole response has been recieved, so we just print it out here
+            //the whole response has been receieved, so we just print it out here
             response.on('end', function () {
-                done(null, str);
+                done(null, JSON.parse(str));
             });
         }).end();
     },
@@ -36,9 +37,10 @@ var CvPartnerConnection = {
                 str += chunk;
             });
 
-            //the whole response has been recieved, so we just print it out here
+            //the whole response has been receieved, so we just print it out here
             response.on('end', function () {
-                done(null, str);
+
+                done(null, JSON.parse(str));
             });
         }).end()
 
@@ -46,19 +48,8 @@ var CvPartnerConnection = {
 };
 
 
-callback = function (response) {
-    var str = '';
 
-    //another chunk of data has been recieved, so append it to `str`
-    response.on('data', function (chunk) {
-        str += chunk;
-    });
 
-    //the whole response has been recieved, so we just print it out here
-    response.on('end', function () {
-        console.log(str);
-    });
-}
-module.exports = CvPartnerConnection;
+module.exports = cvPartnerConnection;
 
 

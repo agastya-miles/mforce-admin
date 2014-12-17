@@ -21,15 +21,16 @@ module.exports = function(passport){
 	});
 
 
+	router.get('/logout', function(req, res) {
+		req.logOut();
+		res.redirect('/');
+	});
+
+
 	/* GET Home Page */
 	router.get('/', isAuthenticated, function(req, res){
 		res.render('home', { user: req.user });
 	});
-
-	// /* GET Home Page */
-	// router.get('/',  function(req, res){
-	// 	res.render('home', { user: req.user });
-	// });
 
 
 	// Redirect the user to Google for authentication.  When complete, Google
