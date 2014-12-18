@@ -29,7 +29,7 @@ module.exports = function(passport){
 
 	/* GET Home Page */
 	router.get('/', isAuthenticated, function(req, res){
-		res.render('home', { user: req.user });
+		res.render('status', { user: req.user });
 	});
 
 

@@ -24,7 +24,7 @@ var traverseUsers = function (i, users, handleUser, done, timeOut) {
 var databaseController = {
 
     copyUsers: function (handleUser, done) {
-        console.log("hepp");
+
 
         cvPartner.getUsers(function (err, users) {
             if (err)
@@ -32,7 +32,7 @@ var databaseController = {
 
             var numberOfUsersLeft = users.length;
             users.forEach(function (user) {
-                handleUser( user.name);
+                handleUser( user.name, (100 - numberOfUsersLeft * 100 / users.length) );
                 database.saveUser(user, function (err) {
                     if (err)
                         throw err;
@@ -59,7 +59,7 @@ var databaseController = {
                             database.saveCvs(cvs, function (err) {
                                 if (err)
                                     throw err;
-                                handleCv(cvs.navn);
+                                handleCv(cvs.navn, (100 - numberOfUsersLeft * 100 / users.length));
                                 if (--numberOfUsersLeft == 0) {
                                     done();
                                 }

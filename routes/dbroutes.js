@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+
 var database = require('../controllers/Database.js');
 var databaseController = require('../controllers/UpdateDatabaseController');
 
@@ -15,40 +16,84 @@ var isAuthenticated = function (req, res, next) {
 };
 
 
-router.get('/deletedb', isAuthenticated, function (req, res) {
-    database.dropAllCvs(function () {
-        console.log('OK');
+module.exports = function (app) {
+
+    app.io.route('deletedb', function (req) {
+
+        console.log('deletedb');
+
+        database.dropAllCvs(function () {
+
+            console.log('dropAllCvs OK');
+            req.io.emit('deletedb', {
+                message: 'dropAllCvs finished',
+                progress: 50
+
+            })
+            database.dropAllUsers(function () {
+                console.log('dropAllUsers OK');
+                req.io.emit('deletedb', {
+                    message: 'dropAllUsers finished',
+                    progress: 100,
+                    finished: true
+                })
+
+            });
+
+        });
     });
 
-    database.dropAllUsers(function () {
-        console.log('OK');
-
-    });
-    res.render('status', {message: 'Databasen slettet'});
-
-});
+    //router.get('/deletedb', isAuthenticated, function (req, res) {
+    //    res.render('status', {action: 'deletedb', message: 'Databasen slettes'});
+    //});
 
 
-router.get('/copydb', isAuthenticated, function (req, res) {
-    databaseController.copyUsers(
-        function (user) {
-            console.log(user);
-        },
+    app.io.route('copydb', function (req) {
 
-        function () {
-            console.log('databaseController.copyUsers finished');
-
-            databaseController.copyCvs(
-                function(cv) {
-                    console.log(cv);
-                },
-                function () {
-                    console.log('databaseController.copyCvs finished');
+        databaseController.copyUsers(
+            function (user, progress) {
+                console.log(user);
+                req.io.emit('user', {
+                    message: user,
+                    progress: progress
+                })
+            },
+            function () {
+                req.io.emit('user', {
+                    message: 'databaseController.copyUsers finished',
+                    progress: 100,
+                    finished: true
 
                 });
-        });
-    res.render('status', {message: 'Database synkronisert'});
+                console.log('databaseController.copyUsers finished');
 
-});
+                databaseController.copyCvs(
+                    function (cv, progress) {
+                        console.log(cv);
+                        req.io.emit('cv', {
+                            message: cv,
+                            progress: progress
+                        })
+                    },
+                    function () {
+                        console.log('databaseController.copyCvs finished');
+                        req.io.emit('cv', {
+                            message: 'copydb finished',
+                            progress: 100,
+                            finished: true
+                        })
 
-module.exports = router;
+                    });
+            });
+    });
+
+    //
+    //router.get('/copydb', isAuthenticated, function (req, res) {
+    //    res.render('status', {action: 'copydb', message: 'Databasen synkroniseres'});
+    //
+    //});
+
+    return router;
+
+
+};

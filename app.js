@@ -1,7 +1,5 @@
-var express = require('express');
+var express = require('express.io');
 
-
-var test = require('unit.js')
 
 
 // Handlebars for Express
@@ -19,6 +17,7 @@ var mongoose = require('mongoose');
 mongoose.connect(dbConfig.url);
 
 var app = express();
+app.http().io();
 
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
@@ -28,7 +27,6 @@ var app = express();
 // view engine setup
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
-
 
 
 app.use(logger('dev'));
@@ -56,8 +54,9 @@ initPassport(passport);
 
 var routes = require('./routes/index')(passport);
 app.use('/', routes);
-var dbRoutes = require('./routes/dbroutes.js');
-app.use('/', dbRoutes);
+var dbRoutes = require('./routes/dbroutes.js')(app);
+    app.use('/', dbRoutes);
+
 
 
 /// catch 404 and forward to error handler
@@ -78,5 +77,27 @@ if (app.get('env') === 'development') {
         });
     });
 }
+
+
+
+// Setup the ready route, and emit talk event.
+app.io.route('adeletedb', function(req) {
+    req.io.emit('talk', {
+        message: 'io event from an io route on the server'
+    })
+});
+
+
+// Setup the ready route, and emit talk event.
+app.io.route('ready', function(req) {
+    req.io.emit('talk', {
+        message: 'io event from an io route on the server'
+    })
+});
+
+
+
+
+
 
 module.exports = app;
