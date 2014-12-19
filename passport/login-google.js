@@ -1,13 +1,13 @@
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var config = require('../config.js').auth;
 
 module.exports = function (passport) {
 
     passport.use(new GoogleStrategy({
             passReqToCallback: true,
-            clientID: '963538669701-gme2v6et0fs288454402qthgke4j20p1.apps.googleusercontent.com',
-            clientSecret: 'gG3E9bn7-9YYKzQj-aR_qSHl',
-            callbackURL: "http://127.0.0.1:3001/auth/google/callback"
-
+            clientID: config.clientID,
+            clientSecret: config.clientSecret,
+            callbackURL: config.callbackURL
         },
         function (req, accessToken, refreshToken, profile, done) {
             console.log(profile._json);
