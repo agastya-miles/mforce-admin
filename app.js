@@ -1,9 +1,9 @@
-var express = require('express');
+var express = require('express.io');
 
 // Handlebars for Express
 var hbs = require('hbs');
 var path = require('path');
-// var favicon = require('serve-favicon');
+var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -25,9 +25,7 @@ mongoose.connect(config.mongodb_uri, function(err){
 
 
 var app = express();
-// enable ssl redirect
-
-// app.http().io();
+app.http().io();
 
 
 // view engine setup
@@ -35,31 +33,22 @@ app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
 
+
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 app.use(require('heroku-ssl-redirect')());
+
 
 // Configuring Passport
 var passport = require('passport');
 var expressSession = require('express-session');
 // TODO - Why Do we need this key ?
-
-
-
-
-var secretKey = 'kjgdsksdfliuyrtrgb';
-var expressSid = 'express.sid';
-
-app.use(expressSession({
-    key:    expressSid,
-    secret: secretKey
-
-}));
+app.use(expressSession({secret: 'ajshdgfjahsdgfkjashgf'}));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -85,8 +74,8 @@ var routes = require('./routes/index')(passport);
 app.use('/', routes);
 
 
-//var dbRoutes = require('./routes/dbroutes.js')(app);
-//    app.use('/', dbRoutes);
+var dbRoutes = require('./routes/dbroutes.js')(app);
+    app.use('/', dbRoutes);
 
 
 
