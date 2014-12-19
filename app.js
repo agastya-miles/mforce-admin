@@ -1,4 +1,4 @@
-var express = require('express.io');
+var express = require('express');
 
 // Handlebars for Express
 var hbs = require('hbs');
