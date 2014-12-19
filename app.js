@@ -1,5 +1,4 @@
 var express = require('express.io');
-var sslRedirect = require('heroku-ssl-redirect');
 
 // Handlebars for Express
 var hbs = require('hbs');
@@ -24,15 +23,13 @@ mongoose.connect(config.mongodb_uri, function(err){
 });
 
 
+var sslRedirect = require('heroku-ssl-redirect');
+
 var app = express();
 // enable ssl redirect
-// app.use(sslRedirect());
+app.use(sslRedirect());
 
-app.http().io();
-
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'jade');
+// app.http().io();
 
 
 // view engine setup
@@ -85,8 +82,10 @@ initPassport(passport);
 
 var routes = require('./routes/index')(passport);
 app.use('/', routes);
-var dbRoutes = require('./routes/dbroutes.js')(app);
-    app.use('/', dbRoutes);
+
+
+//var dbRoutes = require('./routes/dbroutes.js')(app);
+//    app.use('/', dbRoutes);
 
 
 
@@ -111,40 +110,25 @@ if (app.get('env') === 'development') {
 
 
 
-// Setup the ready route, and emit talk event.
-app.io.route('adeletedb', function(req) {
-    req.io.emit('talk', {
-        message: 'io event from an io route on the server'
-    })
-});
 
-
-// Setup the ready route, and emit talk event.
-app.io.route('ready', function(req) {
-    req.io.emit('talk', {
-        message: 'io event from an io route on the server'
-    })
-});
-
-
-app.io.set('authorization', function (handshakeData, accept) {
-
-    //if (handshakeData.headers.cookie) {
-    //
-    //    handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
-    //
-    //    handshakeData.sessionID = connect.utils.parseSignedCookie(handshakeData.cookie['express.sid'], 'secret');
-    //
-    //    if (handshakeData.cookie['express.sid'] == handshakeData.sessionID) {
-    //        return accept('Cookie is invalid.', false);
-    //    }
-    //
-    //} else {
-    //    return accept('No cookie transmitted.', false);
-    //}
-
-    accept(null, true);
-});
+//app.io.set('authorization', function (handshakeData, accept) {
+//
+//    //if (handshakeData.headers.cookie) {
+//    //
+//    //    handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
+//    //
+//    //    handshakeData.sessionID = connect.utils.parseSignedCookie(handshakeData.cookie['express.sid'], 'secret');
+//    //
+//    //    if (handshakeData.cookie['express.sid'] == handshakeData.sessionID) {
+//    //        return accept('Cookie is invalid.', false);
+//    //    }
+//    //
+//    //} else {
+//    //    return accept('No cookie transmitted.', false);
+//    //}
+//
+//    accept(null, true);
+//});
 
 
 
