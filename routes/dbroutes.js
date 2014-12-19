@@ -20,6 +20,7 @@ module.exports = function (app) {
 
     app.io.route('deletedb', function (req) {
 
+
         console.log('deletedb');
 
         database.dropAllCvs(function () {
@@ -42,10 +43,6 @@ module.exports = function (app) {
 
         });
     });
-
-    //router.get('/deletedb', isAuthenticated, function (req, res) {
-    //    res.render('status', {action: 'deletedb', message: 'Databasen slettes'});
-    //});
 
 
     app.io.route('copydb', function (req) {
@@ -87,11 +84,7 @@ module.exports = function (app) {
             });
     });
 
-    //
-    //router.get('/copydb', isAuthenticated, function (req, res) {
-    //    res.render('status', {action: 'copydb', message: 'Databasen synkroniseres'});
-    //
-    //});
+
 
     return router;
 
