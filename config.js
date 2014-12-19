@@ -19,7 +19,7 @@ function getConfig() {
                 auth : {
                     clientID: '694346714586-0l2djhdvhrc09rhl2pc6s3mmpitmk4uf.apps.googleusercontent.com',
                     clientSecret: 'KAQZTd7C6EjMAiustuLrke6a',
-                    callbackURL: 'http://cvpartner-admin.herokuapp.com/auth/google/callback'
+                    callbackURL: 'https://cvpartner-admin.herokuapp.com/auth/google/callback'
                 }
             };
     }
