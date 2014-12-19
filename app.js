@@ -1,6 +1,5 @@
 var express = require('express.io');
-
-
+var sslRedirect = require('heroku-ssl-redirect');
 
 // Handlebars for Express
 var hbs = require('hbs');
@@ -26,6 +25,9 @@ mongoose.connect(config.mongodb_uri, function(err){
 
 
 var app = express();
+// enable ssl redirect
+app.use(sslRedirect());
+
 app.http().io();
 
 // view engine setup
@@ -50,11 +52,27 @@ var expressSession = require('express-session');
 // TODO - Why Do we need this key ?
 
 
-app.use(expressSession({secret: 'mySecretKey'}));
+
+
+var secretKey = 'kjgdsksdfliuyrtrgb';
+var expressSid = 'express.sid';
+
+app.use(expressSession({
+    key:    expressSid,
+    secret: secretKey
+
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
-
+//var passportSocketIo = require("passport.socketio");
+//app.io.use(passportSocketIo.authorize({
+//    cookieParser: cookieParser,
+//    key:         expressSid,       //make sure is the same as in your session settings in app.js
+//    secret:      secretKey,    //make sure is the same as in your session settings in app.js
+//    store:       sessionStore        //you need to use the same sessionStore you defined in the app.use(session({... in app.js
+//
+//}));
 
  // Using the flash middleware provided by connect-flash to store messages in session
  // and displaying in templates
