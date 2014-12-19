@@ -23,7 +23,7 @@ mongoose.connect(config.mongodb_uri, function(err){
 });
 
 
-var sslRedirect = require('heroku-ssl-redirect');
+// var sslRedirect = require('heroku-ssl-redirect');
 
 var app = express();
 // enable ssl redirect
