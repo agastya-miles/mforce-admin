@@ -26,7 +26,7 @@ mongoose.connect(config.mongodb_uri, function(err){
 
 var app = express();
 // enable ssl redirect
-app.use(sslRedirect());
+// app.use(sslRedirect());
 
 app.http().io();
 
