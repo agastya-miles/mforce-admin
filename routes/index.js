@@ -22,8 +22,6 @@ module.exports = function(passport){
 
 
 	router.get('/logout', function(req, res) {
-		console.log('-------------' + req.hostname + req.originalUrl);
-
 		req.logOut();
 		res.redirect('/');
 	});
@@ -31,7 +29,6 @@ module.exports = function(passport){
 
 	/* GET Home Page */
 	router.get('/', isAuthenticated, function(req, res){
-		console.log('-------------' + req.hostname + req.originalUrl);
 		res.render('status', { user: req.user });
 	});
 
