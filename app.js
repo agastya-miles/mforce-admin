@@ -1,4 +1,4 @@
-var express = require('express');
+var express = require('express.io');
 
 // Handlebars for Express
 var hbs = require('hbs');
@@ -27,7 +27,7 @@ mongoose.connect(config.mongodb_uri, function(err){
 var app = express();
 // enable ssl redirect
 
-// app.http().io();
+app.http().io();
 
 
 // view engine setup
@@ -43,7 +43,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(require('heroku-ssl-redirect')());
+app.use(require('./heroku-ssl-redirect.io')());
 
 
 
@@ -78,8 +78,8 @@ var routes = require('./routes/index')(passport);
 app.use('/', routes);
 
 
-//var dbRoutes = require('./routes/dbroutes.js')(app);
-//    app.use('/', dbRoutes);
+var dbRoutes = require('./routes/dbroutes.js')(app);
+    app.use('/', dbRoutes);
 
 
 
