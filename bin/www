@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 
-var debug = require('debug')('cvpartner-admin');
+var debug = require('debug')('cv-partner-admin');
 var app = require('../app');
 
 app.set('port', process.env.PORT || 3001);

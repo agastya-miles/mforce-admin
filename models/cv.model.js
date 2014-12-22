@@ -1,9 +1,9 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var cvSchema = new Schema({
+var CvSchema = new Schema({
     _id: String
 
 });
 
-module.exports = mongoose.model('CV', cvSchema, 'cvs'); // MongoDB collection name is 'cvs'
+module.exports = mongoose.model('CV', CvSchema, 'cvs'); // MongoDB collection name is 'cvs'

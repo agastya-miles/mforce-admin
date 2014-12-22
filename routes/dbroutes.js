@@ -3,20 +3,14 @@ var router = express.Router();
 
 var database = require('../controllers/Database.js');
 var databaseController = require('../controllers/UpdateDatabaseController');
-
-
-var isAuthenticated = function (req, res, next) {
-    // if user is authenticated in the session, call the next() to call the next request handler
-    // Passport adds this method to request object. A middleware is allowed to add properties to
-    // request and response objects
-    if (req.isAuthenticated())
-        return next();
-    // if the user is not authenticated then redirect him to the login page
-    res.redirect('/login');
-};
-
+var DbLog = require('../models/dblog.model.js');
 
 module.exports = function (app) {
+
+    /* GET Home Page */
+    router.get('/', function (req, res) {
+        res.render('status', {user: req.user});
+    });
 
     app.io.route('deletedb', function (req) {
 
@@ -26,12 +20,33 @@ module.exports = function (app) {
         database.dropAllCvs(function () {
 
             console.log('dropAllCvs OK');
+
+            var dbLog = new DbLog({
+                when: new Date(),
+                what: 'All CV deleted',
+                comment: 'Manually'
+            });
+            dbLog.save(function (err) {
+                if (err)
+                    console.log(err);
+            });
+
             req.io.emit('deletedb', {
                 message: 'dropAllCvs finished',
                 progress: 50
 
-            })
+            });
             database.dropAllUsers(function () {
+                var dbLog = new DbLog({
+                    when: new Date(),
+                    what: 'All Users deleted',
+                    comment: 'Manually'
+                });
+                dbLog.save(function (err) {
+                    if (err)
+                        console.log(err);
+                });
+
                 console.log('dropAllUsers OK');
                 req.io.emit('deletedb', {
                     message: 'dropAllUsers finished',
@@ -56,6 +71,16 @@ module.exports = function (app) {
                 })
             },
             function () {
+
+                var dbLog = new DbLog({
+                    when: new Date(),
+                    what: 'All Users copied',
+                    comment: 'Manually'
+                });
+                dbLog.save(function (err) {
+                    if (err)
+                        console.log(err);
+                });
                 req.io.emit('user', {
                     message: 'databaseController.copyUsers finished',
                     progress: 100,
@@ -74,6 +99,15 @@ module.exports = function (app) {
                     },
                     function () {
                         console.log('databaseController.copyCvs finished');
+                        var dbLog = new DbLog({
+                            when: new Date(),
+                            what: 'All CV copied',
+                            comment: 'Manually'
+                        });
+                        dbLog.save(function (err) {
+                            if (err)
+                                console.log(err);
+                        });
                         req.io.emit('cv', {
                             message: 'copydb finished',
                             progress: 100,
@@ -83,7 +117,6 @@ module.exports = function (app) {
                     });
             });
     });
-
 
 
     return router;

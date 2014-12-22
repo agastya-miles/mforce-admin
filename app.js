@@ -9,6 +9,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 
+var scheduler = require('./controllers/UpdateDatabaseScheduler');
+
 var config = require('./config.js');
 
 
@@ -17,17 +19,19 @@ var mongoose = require('mongoose');
 
 
 mongoose.connect(config.mongodb_uri, function(err){
+    console.log('MongoDB URL:' + config.mongodb_uri);
     if (err){
-        console.log(err);
+        console.log(err)
     }
-});
+})
+
 
 
 
 var app = express();
 // enable ssl redirect
 
-app.http().io();
+app.http().io()
 
 
 // view engine setup
@@ -74,9 +78,24 @@ app.use(flash());
 var initPassport = require('./passport/init');
 initPassport(passport);
 
+
+
+
 var routes = require('./routes/index')(passport);
 app.use('/', routes);
 
+
+var isAuthenticated = function (req, res, next) {
+    // if user is authenticated in the session, call the next() to call the next request handler
+    // Passport adds this method to request object. A middleware is allowed to add properties to
+    // request and response objects
+    if (req.isAuthenticated())
+        return next();
+    // if the user is not authenticated then redirect him to the login page
+    res.redirect('/login');
+};
+
+app.all('*', isAuthenticated);
 
 var dbRoutes = require('./routes/dbroutes.js')(app);
     app.use('/', dbRoutes);
