@@ -1,9 +1,9 @@
 /**
  * Created by arvid on 17/12/14.
  */
-var mongoose = require('mongoose');
-var User = require('../models/user.model.js');
-var CV = require('../models/cv.model.js');
+var mongoose = require('mongoose'),
+    User = require('../models/user.model.js'),
+    CV = require('../models/cv.model.js');
 
 var database = {
 

@@ -5,11 +5,11 @@ function getConfig() {
         default:
             return {
                 mongodb_uri: "mongodb://localhost:27017/cvpartner",
-                disable_auth: true,
                 auth : {
                     clientID: '963538669701-gme2v6et0fs288454402qthgke4j20p1.apps.googleusercontent.com',
                     clientSecret: 'gG3E9bn7-9YYKzQj-aR_qSHl',
-                    callbackURL: 'http://127.0.0.1:3001/auth/google/callback'
+                    callbackURL: 'http://127.0.0.1:3001/auth/google/callback',
+                    disable: true
                 },
                 synchSchedule: {
                     hour: 1,

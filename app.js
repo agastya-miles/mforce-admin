@@ -1,21 +1,15 @@
-var express = require('express.io');
+var express = require('express.io'),
+    hbs = require('hbs'),
+    path = require('path'),
+    favicon = require('serve-favicon'),
+    logger = require('morgan'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
+    scheduler = require('./controllers/UpdateDatabaseScheduler'),
+    config = require('./config.js'),
+    mongoose = require('mongoose'),
+    isAuthenticated = require('./controllers/auth.js');
 
-// Handlebars for Express
-var hbs = require('hbs');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-
-
-var scheduler = require('./controllers/UpdateDatabaseScheduler');
-
-var config = require('./config.js');
-
-
-var mongoose = require('mongoose');
-// Connect to DB
 
 
 mongoose.connect(config.mongodb_uri, function(err){
@@ -24,8 +18,6 @@ mongoose.connect(config.mongodb_uri, function(err){
         console.log(err)
     }
 })
-
-
 
 
 var app = express();
@@ -38,9 +30,6 @@ app.http().io()
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-
-
-
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -48,9 +37,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(require('./heroku-ssl-redirect.io')());
-
-
-
 
 // Configuring Passport
 var passport = require('passport');
@@ -78,28 +64,14 @@ app.use(flash());
 var initPassport = require('./passport/init');
 initPassport(passport);
 
-
-
-
 var routes = require('./routes/index')(passport);
 app.use('/', routes);
 
-
-var isAuthenticated = function (req, res, next) {
-    // if user is authenticated in the session, call the next() to call the next request handler
-    // Passport adds this method to request object. A middleware is allowed to add properties to
-    // request and response objects
-    if (req.isAuthenticated())
-        return next();
-    // if the user is not authenticated then redirect him to the login page
-    res.redirect('/login');
-};
 
 app.all('*', isAuthenticated);
 
 var dbRoutes = require('./routes/dbroutes.js')(app);
     app.use('/', dbRoutes);
-
 
 
 /// catch 404 and forward to error handler

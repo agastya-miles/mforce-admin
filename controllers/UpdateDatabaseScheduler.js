@@ -1,8 +1,8 @@
-var schedule = require('node-schedule');
-var config = require('../config.js').synchSchedule;
-var databaseController = require('../controllers/UpdateDatabaseController');
-var debug = require('debug')('cv-partner-admin');
-var DbLog = require('../models/dblog.model.js');
+var schedule = require('node-schedule'),
+    config = require('../config.js').synchSchedule,
+    databaseController = require('../controllers/UpdateDatabaseController'),
+    debug = require('debug')('cv-partner-admin'),
+    DbLog = require('../models/dblog.model.js');
 
 
 schedule.scheduleJob(config, function () {

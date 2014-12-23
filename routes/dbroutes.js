@@ -1,15 +1,25 @@
 var express = require('express');
 var router = express.Router();
 
-var database = require('../controllers/Database.js');
-var databaseController = require('../controllers/UpdateDatabaseController');
-var DbLog = require('../models/dblog.model.js');
+var database = require('../controllers/Database.js'),
+    databaseController = require('../controllers/UpdateDatabaseController'),
+    DbLog = require('../models/dblog.model.js');
 
 module.exports = function (app) {
 
     /* GET Home Page */
     router.get('/', function (req, res) {
-        res.render('status', {user: req.user});
+        DbLog.find({},  function (err, log) {
+            res.render('home', {logs: log, user: req.user});
+
+        });
+    });
+
+
+    router.get('/dblog', function ( req, res) {
+        DbLog.find({},  function (err, log) {
+            res.json(log);
+        });
     });
 
     app.io.route('deletedb', function (req) {
