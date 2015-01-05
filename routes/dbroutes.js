@@ -74,7 +74,6 @@ module.exports = function (app) {
 
         databaseController.copyUsers(
             function (user, progress) {
-                console.log(user);
                 req.io.emit('user', {
                     message: user,
                     progress: progress
@@ -101,7 +100,6 @@ module.exports = function (app) {
 
                 databaseController.copyCvs(
                     function (cv, progress) {
-                        console.log(cv);
                         req.io.emit('cv', {
                             message: cv,
                             progress: progress

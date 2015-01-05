@@ -12,8 +12,8 @@ function getConfig() {
                     disable: true
                 },
                 synchSchedule: {
-                    hour: 1,
-                    second: 0
+                    // hour: 0,
+                    second: 1
                 }
             };
 

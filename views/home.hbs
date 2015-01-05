@@ -60,11 +60,10 @@
     </tr>
 </script>
 
-
 <script>
 
-
     io = io.connect();
+
     var source = $("#dblog-template").html();
     var template = Handlebars.compile(source);
 
@@ -73,7 +72,7 @@
         $.get("/dblog", function (log) {
             log.forEach( function(entry){
                 var result = template({entry: entry});
-                $("#dblog-table").append(result);
+                $("#dblog-table").prepend(result);
             });
         });
     });
