@@ -11,6 +11,8 @@ var options = {
 
 };
 
+
+
 var cvPartnerConnection = {
     getUsers: function (done) {
         options.path = '/api/v1/users';

@@ -4,7 +4,7 @@ function getConfig() {
         case 'development':
         default:
             return {
-                mongodb_uri: "mongodb://localhost:27017/cvpartner",
+                mongodb_uri:  process.env.MONGODB_URI || "mongodb://localhost:27017/cvpartner",
                 auth : {
                     clientID: '963538669701-gme2v6et0fs288454402qthgke4j20p1.apps.googleusercontent.com',
                     clientSecret: 'gG3E9bn7-9YYKzQj-aR_qSHl',
@@ -12,14 +12,14 @@ function getConfig() {
                     disable: true
                 },
                 synchSchedule: {
-                    // hour: 0,
+                    hour: 0,
                     second: 1
                 }
             };
 
         case 'production':
             return {
-                mongodb_uri: "mongodb://miles_user:miles_password@ds047030.mongolab.com:47030/heroku_app30746985",
+                mongodb_uri: process.env.MONGODB_URI,
                 auth : {
                     clientID: '694346714586-0l2djhdvhrc09rhl2pc6s3mmpitmk4uf.apps.googleusercontent.com',
                     clientSecret: 'KAQZTd7C6EjMAiustuLrke6a',
