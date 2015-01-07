@@ -1,29 +1,127 @@
 <h2>Admin Users</h2>
 
-<div class="col-md-2">
-    <table id="admin-user-table" class="table table-bordered table-striped table-hover">
+<div class="col-md-4">
+    <table id="admin-user-table" class="table table-condensed  table-bordered table-striped table-hover">
 
         <thead>
         <tr>
             <th data-column-id="email">E-Mail</th>
+            <th style="display: none;" data-column-id="ID">ID</th>
+            <th data-column-id="Delete">
+                <button id="delete-button" type="button" class="btn btn-danger disabled">Slett</button>
+            </th>
         </tr>
         </thead>
         <tbody>
         {{#each adminusers}}
             <tr>
-                <td>{{email}}</td>
+                <td id="email">{{email}}</td>
+                <td id="ID" style="display: none;">{{_id}}</td>
+                <td><input type="checkbox" class="checkbox"/></td>
             </tr>
         {{/each}}
 
-        <td>test@user</td>
-
-        <tr>
-            <td >
-                <input type="email" class="form-control" id="newAdminUser" placeholder="Enter new admin user">
+        <tr id="newAdminUserRow">
+            <td>
+                <input id="newAdminUser" type="email" class="form-control" placeholder="Enter new admin user">
             </td>
         </tr>
 
         </tbody>
-
     </table>
 </div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script src="js/bootbox.js"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+        console.log("Init jquery");
+        $('#delete-button').click(function (e) {
+            e.preventDefault();
+            bootbox.confirm("Er du sikker på at du vil slette de valgte brukerne?", function (result) {
+                if (result) {
+                    deleteSelectedUsers();
+                    $("#delete-button").addClass('disabled');
+                }
+            });
+
+        });
+
+
+
+        registerCallbacks();
+
+
+    });
+
+    function registerCallbacks() {
+
+        $("#newAdminUser").keyup(function (e) {
+            if (e.keyCode == 13) {
+                console.log("POST");
+                var email = $("#newAdminUser").val();
+                jQuery.post("/api/admin-users", {
+                    "email": email
+                }, function (data, textStatus, jqXHR) {
+                    removeInputRow();
+                    $('#admin-user-table').append('<tr><td>' + data.email + '</td><td style="display: none;" id="ID">' + data._id + '</td><td><input type="checkbox" class = "checkbox"/></td></tr>');
+                    addInputRow();
+                    registerCallbacks();
+                    $("#newAdminUser").focus();
+
+                });
+            }
+        });
+
+        $(".checkbox").change(function () {
+            if (isAllCheckBoxUnChecked())
+                $("#delete-button").addClass('disabled');
+            else
+                $("#delete-button").removeClass('disabled');
+        });
+
+    }
+
+    function deleteSelectedUsers() {
+        $('#admin-user-table tr').each(function (i, row) {
+
+            $(this).find('input:checked').each(function () {
+                var id =  $(row).find('#ID').text();
+                console.log('Jeg vil slette:' + id);
+                jQuery.ajax( {
+                   url: "/api/admin-users/" + id,
+                   type: "DELETE",
+                    success: function (data, textStatus, jqXHR) {
+                        console.log("Delete response:");
+                        console.dir(data);
+                        console.log(textStatus);
+                        console.dir(jqXHR);
+                    }
+
+                });
+                row.remove();
+            });
+
+        });
+
+    }
+
+
+    function isAllCheckBoxUnChecked() {
+        return $('input:checked').length === 0;
+    }
+
+    function removeInputRow() {
+        $("#newAdminUserRow").remove();
+    }
+
+    function addInputRow() {
+        $('#admin-user-table').append(' <tr id="newAdminUserRow"><td><input type="email" class="form-control" id="newAdminUser" placeholder="Enter new admin user"></td ></tr> ');
+    }
+
+</script>
