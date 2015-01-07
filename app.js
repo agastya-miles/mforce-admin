@@ -11,10 +11,9 @@ var express = require('express.io'),
     isAuthenticated = require('./controllers/auth.js');
 
 
-
-mongoose.connect(config.mongodb_uri, function(err){
+mongoose.connect(config.mongodb_uri, function (err) {
     console.log('MongoDB URL:' + config.mongodb_uri);
-    if (err){
+    if (err) {
         console.log(err)
     }
 })
@@ -32,7 +31,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -55,8 +54,8 @@ app.use(passport.session());
 //
 //}));
 
- // Using the flash middleware provided by connect-flash to store messages in session
- // and displaying in templates
+// Using the flash middleware provided by connect-flash to store messages in session
+// and displaying in templates
 var flash = require('connect-flash');
 app.use(flash());
 
@@ -71,11 +70,13 @@ app.use('/', routes);
 app.all('*', isAuthenticated);
 
 var dbRoutes = require('./routes/dbroutes.js')(app);
-    app.use('/', dbRoutes);
+app.use('/', dbRoutes);
 
+var adminRoutes = require('./routes/adminroutes.js')();
+app.use('/', adminRoutes);
 
 /// catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
@@ -84,7 +85,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
+    app.use(function (err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
@@ -92,8 +93,6 @@ if (app.get('env') === 'development') {
         });
     });
 }
-
-
 
 
 //app.io.set('authorization', function (handshakeData, accept) {
@@ -114,7 +113,6 @@ if (app.get('env') === 'development') {
 //
 //    accept(null, true);
 //});
-
 
 
 module.exports = app;

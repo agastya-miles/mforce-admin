@@ -1,0 +1,29 @@
+<h2>Admin Users</h2>
+
+<div class="col-md-2">
+    <table id="admin-user-table" class="table table-bordered table-striped table-hover">
+
+        <thead>
+        <tr>
+            <th data-column-id="email">E-Mail</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each adminusers}}
+            <tr>
+                <td>{{email}}</td>
+            </tr>
+        {{/each}}
+
+        <td>test@user</td>
+
+        <tr>
+            <td >
+                <input type="email" class="form-control" id="newAdminUser" placeholder="Enter new admin user">
+            </td>
+        </tr>
+
+        </tbody>
+
+    </table>
+</div>

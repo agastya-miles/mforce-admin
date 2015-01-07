@@ -24,6 +24,10 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
         <ul class="nav navbar-nav">
+            <li class="{{#if database_tab}}active{{/if}}" id="database-link"><a href="/">Database</a></li>
+            <li class="{{#if adminuser_tab}}active{{/if}}" id="adminuser-link"><a href="/admin-users">Admin users</a></li>
+
+
         </ul>
         <ul class="nav navbar-nav navbar-right">
         <p>{{user.name}}</p>

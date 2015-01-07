@@ -3,21 +3,30 @@ var router = express.Router();
 
 var database = require('../controllers/Database.js'),
     databaseController = require('../controllers/UpdateDatabaseController'),
+    AdminUsers = require('../models/adminuser.model.js'),
     DbLog = require('../models/dblog.model.js');
 
 module.exports = function (app) {
 
+    //router.get('/admin-users', function (req, res) {
+    //    AdminUsers.find({}, function (err, users) {
+    //        res.render('adminuser', {adminusers: users, adminuser_tab: true});
+    //
+    //    });
+    //});
+
+
     /* GET Home Page */
     router.get('/', function (req, res) {
-        DbLog.find({},  function (err, log) {
-            res.render('home', {logs: log, user: req.user});
+        DbLog.find({}, function (err, log) {
+            res.render('home', {logs: log, user: req.user, database_tab: true});
 
         });
     });
 
 
-    router.get('/dblog', function ( req, res) {
-        DbLog.find({},  function (err, log) {
+    router.get('/dblog', function (req, res) {
+        DbLog.find({}, function (err, log) {
             res.json(log);
         });
     });
