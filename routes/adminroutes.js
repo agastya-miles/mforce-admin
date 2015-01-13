@@ -40,6 +40,21 @@ module.exports = function () {
         });
     });
 
+    router.post('/bootgrid/api/admin-users', function (req, res) {
+        AdminUser.find(function (err, users) {
+            var response = new Object({
+                current: 1,
+                rowCount: users.length,
+                rows: users,
+                total: users.length
+
+
+            });
+            res.json(response);
+
+        });
+    });
+
     router.post('/api/admin-users', function (req, res) {
 
         var adminUser = new AdminUser({
@@ -61,27 +76,27 @@ module.exports = function () {
 
     });
 
-    router.delete('/api/admin-users/:id', function( req, res) {
-          AdminUser.findByIdAndRemove(req.params.id, function(err, user){
-              if (err) {
-                  console.log(err);
-                  res.status(500);
-                  res.json(err.message);
-              } else {
-                  if (user) {
-                      res.json(user);
-                  } else {
-                      res.status(404);
-                      res.send("Not found");
-                  }
-              }
-          });
+    router.delete('/api/admin-users/:id', function (req, res) {
+        AdminUser.findByIdAndRemove(req.params.id, function (err, user) {
+            if (err) {
+                console.log(err);
+                res.status(500);
+                res.json(err.message);
+            } else {
+                if (user) {
+                    res.json(user);
+                } else {
+                    res.status(404);
+                    res.send("Not found");
+                }
+            }
+        });
 
     });
 
 
-    router.put('/api/admin-users/:id', function( req, res) {
-        AdminUser.findByIdAndUpdate(req.params.id, req.body,  function(err, user){
+    router.put('/api/admin-users/:id', function (req, res) {
+        AdminUser.findByIdAndUpdate(req.params.id, req.body, function (err, user) {
             if (err) {
                 console.log(err);
                 res.status(500);

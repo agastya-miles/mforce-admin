@@ -5,123 +5,108 @@
 
         <thead>
         <tr>
-            <th data-column-id="email">E-Mail</th>
-            <th style="display: none;" data-column-id="ID">ID</th>
-            <th data-column-id="Delete">
-                <button id="delete-button" type="button" class="btn btn-danger disabled">Slett</button>
-            </th>
+            <th data-visible="false" data-identifier="true" data-column-id="_id">ID</th>
+            <th contenteditable='true' data-column-id="email" >E-Mail</th>
+            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
         </tr>
         </thead>
         <tbody>
         {{#each adminusers}}
             <tr>
-                <td id="email">{{email}}</td>
-                <td id="ID" style="display: none;">{{_id}}</td>
-                <td><input type="checkbox" class="checkbox"/></td>
+                <td>{{_id}}</td>
+                <td contenteditable='true'>{{email}}</td>
+                <td></td>
             </tr>
         {{/each}}
 
-        <tr id="newAdminUserRow">
-            <td>
-                <input id="newAdminUser" type="email" class="form-control" placeholder="Enter new admin user">
-            </td>
-        </tr>
 
         </tbody>
     </table>
+    <button onclick="addUserRow()" type="button" class="btn btn-default">
+        Add user
+    </button>
 </div>
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-<script src="js/bootbox.js"></script>
 
+<script src="js/bootbox.js"></script>
+<script src="js/mindmup-editabletable.js"></script>
 
 <script>
-
     $(document).ready(function () {
-        console.log("Init jquery");
-        $('#delete-button').click(function (e) {
-            e.preventDefault();
-            bootbox.confirm("Er du sikker på at du vil slette de valgte brukerne?", function (result) {
-                if (result) {
-                    deleteSelectedUsers();
-                    $("#delete-button").addClass('disabled');
+
+        var grid = $("#admin-user-table").bootgrid({
+            ajax: false,
+            selection: false,
+            multiSelect: true,
+            columnSelection: false,
+            rowSelect: false,
+            rowCount: -1, // do not limit number of displayed rows
+            keepSelection: true,
+            formatters: {
+                "commands": function (column, row) {
+                    return "<button type=\"button\" class=\"btn btn-xs btn-primary command-edit\" data-row-id=\"" + row._id + "\">Rediger</button> " +
+                            "<button type=\"button\" class=\"btn  btn-xs  btn-danger command-delete\" data-row-id=\"" + row._id + "\">Slett</button>";
+                },
+                "editable": function(column, row) {
+                    return "<div contenteditable=\"true\">" + row[column.id] + "</div>";
                 }
+            }
+
+
+        }).on("selected.rs.jquery.bootgrid", function (e, rows) {
+            var rowIds = [];
+            for (var i = 0; i < rows.length; i++) {
+                rowIds.push(rows[i].id);
+            }
+            alert("Select: " + rowIds.join(","));
+        }).on("deselected.rs.jquery.bootgrid", function (e, rows) {
+            var rowIds = [];
+            for (var i = 0; i < rows.length; i++) {
+                rowIds.push(rows[i].id);
+            }
+            alert("Deselect: " + rowIds.join(","));
+        }).on("loaded.rs.jquery.bootgrid", function () {
+
+            grid.find(".command-edit").on("click", function (e) {
+
+            }).end().find(".command-delete").on("click", function (e) {
+                var id = $(this).data("row-id");
+                bootbox.confirm("Er du sikker på at du vil slette brukeren?", function (result) {
+                    if (result) {
+                        console.log("Deleting:" + id);
+                        deleteUser(id);
+                        $("#admin-user-table").bootgrid('remove', [id]);
+                    }
+
+                });
             });
 
         });
-
-
-
-        registerCallbacks();
 
 
     });
 
-    function registerCallbacks() {
 
-        $("#newAdminUser").keyup(function (e) {
-            if (e.keyCode == 13) {
-                console.log("POST");
-                var email = $("#newAdminUser").val();
-                jQuery.post("/api/admin-users", {
-                    "email": email
-                }, function (data, textStatus, jqXHR) {
-                    removeInputRow();
-                    $('#admin-user-table').append('<tr><td>' + data.email + '</td><td style="display: none;" id="ID">' + data._id + '</td><td><input type="checkbox" class = "checkbox"/></td></tr>');
-                    addInputRow();
-                    registerCallbacks();
-                    $("#newAdminUser").focus();
+    function addUserRow() {
+        $("#admin-user-table").bootgrid('append',' <tr id="newAdminUserRow"><td></td ></tr> ' );
+    }
 
-                });
+    function deleteUser(id){
+        jQuery.ajax({
+            url: "/api/admin-users/" + id,
+            type: "DELETE",
+            success: function (data, textStatus, jqXHR) {
+                console.log("Delete response:");
+                console.dir(data);
+                console.log(textStatus);
+                console.dir(jqXHR);
             }
-        });
-
-        $(".checkbox").change(function () {
-            if (isAllCheckBoxUnChecked())
-                $("#delete-button").addClass('disabled');
-            else
-                $("#delete-button").removeClass('disabled');
-        });
-
-    }
-
-    function deleteSelectedUsers() {
-        $('#admin-user-table tr').each(function (i, row) {
-
-            $(this).find('input:checked').each(function () {
-                var id =  $(row).find('#ID').text();
-                console.log('Jeg vil slette:' + id);
-                jQuery.ajax( {
-                   url: "/api/admin-users/" + id,
-                   type: "DELETE",
-                    success: function (data, textStatus, jqXHR) {
-                        console.log("Delete response:");
-                        console.dir(data);
-                        console.log(textStatus);
-                        console.dir(jqXHR);
-                    }
-
-                });
-                row.remove();
-            });
 
         });
-
     }
 
 
-    function isAllCheckBoxUnChecked() {
-        return $('input:checked').length === 0;
-    }
-
-    function removeInputRow() {
-        $("#newAdminUserRow").remove();
-    }
-
-    function addInputRow() {
-        $('#admin-user-table').append(' <tr id="newAdminUserRow"><td><input type="email" class="form-control" id="newAdminUser" placeholder="Enter new admin user"></td ></tr> ');
-    }
 
 </script>

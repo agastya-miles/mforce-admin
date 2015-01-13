@@ -12,7 +12,6 @@ var options = {
 };
 
 
-
 var cvPartnerConnection = {
     getUsers: function (done) {
         options.path = '/api/v1/users';
@@ -31,25 +30,29 @@ var cvPartnerConnection = {
     },
 
     getCvs: function (userId, cvId, done) {
-      options.path = '/api/v1/cvs/' + userId + '/' + cvId;
+        options.path = '/api/v1/cvs/' + userId + '/' + cvId;
         http.request(options, function (response) {
             var str = '';
+            if (response.statusCode === 200) {
 
-            response.on('data', function (chunk) {
-                str += chunk;
-            });
 
-            //the whole response has been receieved, so we just print it out here
-            response.on('end', function () {
+                response.on('data', function (chunk) {
+                    str += chunk;
+                });
 
-                done(null, JSON.parse(str));
-            });
+                //the whole response has been receieved, so we just print it out here
+                response.on('end', function () {
+                    done(null, JSON.parse(str));
+                });
+            } else {
+                done("status:" + response.statusCode + " URL: " + options.path ,null);
+            }
+
+
         }).end()
 
     }
 };
-
-
 
 
 module.exports = cvPartnerConnection;

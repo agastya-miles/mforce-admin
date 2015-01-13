@@ -29,12 +29,12 @@
 
     </div>
     <div>
-        <table class="table table-bordered table-striped table-hover">
+        <table class="table table-condensed table-hover table-striped apply-bootgrid">
             <thead>
             <tr>
                 <th>Når</th>
                 <th>Hva</th>
-                <th data-visible="true">Kommentar</th>
+                <th data-column-id="Comment" data-visible="false">Kommentar</th>
             </tr>
             </thead>
             <tbody id="dblog-table" >
@@ -48,7 +48,6 @@
 </div>
 
 
-<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/handlebars-1.0.rc.1.min.js"></script>
 

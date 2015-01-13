@@ -54,17 +54,22 @@ var databaseController = {
                 traverseUsers(0, users,
                     function (userId, cvId) {
                         cvPartner.getCvs(userId, cvId, function (err, cvs) {
-                            if (err)
-                                throw err;
-                            database.saveCvs(cvs, function (err) {
-                                if (err)
-                                    throw err;
-                                handleCv(cvs.navn, (100 - numberOfUsersLeft * 100 / users.length));
-                                if (--numberOfUsersLeft == 0) {
-                                    done();
-                                }
+                            if (err) {
+                                console.error("Copy CV:" + err)
+                            } else {
+                                database.saveCvs(cvs, function (err) {
+                                    if (err)
+                                        throw err;
+                                    handleCv(cvs.navn, (100 - numberOfUsersLeft * 100 / users.length));
 
-                            });
+
+                                });
+                            }
+                            if (--numberOfUsersLeft == 0) {
+                                done();
+                            }
+
+
                         });
                     },
                     function () {
