@@ -2,7 +2,8 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var AdminUserSchema = new Schema({
-    email:  { type: String  , unique: true }
+    email:  { type: String  , unique: true },
+    name:  { type: String }
 });
 
 

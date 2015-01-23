@@ -1,20 +1,29 @@
 <h2>Admin Users</h2>
 
-<div class="col-md-4">
-    <table id="admin-user-table" class="table table-condensed  table-bordered table-striped table-hover">
+<div class="col-md-8">
 
+    <table id="admin-user-table" class="table table-condensed  table-bordered table-striped table-hover">
+        <button onclick="addUserRow()" type="button" class="btn btn-default">
+            Add user
+        </button>
         <thead>
         <tr>
-            <th data-visible="false" data-identifier="true" data-column-id="_id">ID</th>
-            <th contenteditable='true' data-column-id="email" >E-Mail</th>
-            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+            <th data-column-id="_id" data-visible="true" data-identifier="true">ID</th>
+
+            <th data-column-id="name" data-formatter="single-input-line" data-css-class="editable">Navn</th>
+
+            <th data-column-id="email" data-formatter="single-input-line" data-css-class="editable">E-Mail</th>
+
+            <th data-header-css-class="commands-class" data-css-class="commands-class" data-column-id="commands"
+                data-formatter="commands" data-sortable="false"></th>
         </tr>
         </thead>
         <tbody>
         {{#each adminusers}}
             <tr>
                 <td>{{_id}}</td>
-                <td contenteditable='true'>{{email}}</td>
+                <td>{{name}}</td>
+                <td>{{email}}</td>
                 <td></td>
             </tr>
         {{/each}}
@@ -22,7 +31,7 @@
 
         </tbody>
     </table>
-    <button onclick="addUserRow()" type="button" class="btn btn-default">
+    <button onclick="addEmptyRow()" type="button" class="btn btn-default">
         Add user
     </button>
 </div>
@@ -30,8 +39,6 @@
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
-<script src="js/bootbox.js"></script>
-<script src="js/mindmup-editabletable.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -46,54 +53,200 @@
             keepSelection: true,
             formatters: {
                 "commands": function (column, row) {
-                    return "<button type=\"button\" class=\"btn btn-xs btn-primary command-edit\" data-row-id=\"" + row._id + "\">Rediger</button> " +
-                            "<button type=\"button\" class=\"btn  btn-xs  btn-danger command-delete\" data-row-id=\"" + row._id + "\">Slett</button>";
+                    var id = row._id;
+                    return editButton(id) + " " + deleteButton(id) + " " + cancelButton(id);
+
                 },
-                "editable": function(column, row) {
-                    return "<div contenteditable=\"true\">" + row[column.id] + "</div>";
+                "single-input-line": function (column, row) {
+                    var value = row[column.id] ? row[column.id] : "";
+                    return "<input label=\"" + column.id + "\" class=\"input\" disabled=\"true\" type=\"text\" value=\"" + value + "\"/>";
                 }
             }
 
-
-        }).on("selected.rs.jquery.bootgrid", function (e, rows) {
-            var rowIds = [];
-            for (var i = 0; i < rows.length; i++) {
-                rowIds.push(rows[i].id);
-            }
-            alert("Select: " + rowIds.join(","));
-        }).on("deselected.rs.jquery.bootgrid", function (e, rows) {
-            var rowIds = [];
-            for (var i = 0; i < rows.length; i++) {
-                rowIds.push(rows[i].id);
-            }
-            alert("Deselect: " + rowIds.join(","));
         }).on("loaded.rs.jquery.bootgrid", function () {
 
-            grid.find(".command-edit").on("click", function (e) {
+            grid.find(".command-edit").on("click", commandEdit).end()
+                    .find(".command-delete").on("click", commandDelete).end()
+                    .find(".command-cancel").on("click", commandCancel).end()
+                    .find(".editable").on("keydown", function (e) {
+                    });
 
-            }).end().find(".command-delete").on("click", function (e) {
-                var id = $(this).data("row-id");
-                bootbox.confirm("Er du sikker på at du vil slette brukeren?", function (result) {
-                    if (result) {
-                        console.log("Deleting:" + id);
-                        deleteUser(id);
-                        $("#admin-user-table").bootgrid('remove', [id]);
-                    }
+            var id = "";
+            var editButton = $("tr[data-row-id='" + id + "'] .command-edit");
+            enableEdit(editButton, id);
 
-                });
-            });
-
+        }).on("appended.rs.jquery.bootgrid", function (e, rows) {
+            console.log("Appended" + rows[0]._id);
         });
-
 
     });
 
 
-    function addUserRow() {
-        $("#admin-user-table").bootgrid('append',' <tr id="newAdminUserRow"><td></td ></tr> ' );
+    function cancelButton(id) {
+        return "<button disabled=\"true\" active=\"false\" type=\"button\" class=\"btn btn-xs btn-default command-cancel\" data-row-id=\"" + id + "\">Angre</button>"
     }
 
-    function deleteUser(id){
+    function editButton(id) {
+        return "<button active=\"false\" type=\"button\" class=\"btn btn-xs btn-primary command-edit\" data-row-id=\"" + id + "\">Rediger</button>"
+    }
+
+    function deleteButton(id) {
+        return "<button active=\"false\"  type=\"button\" class=\"btn  btn-xs  btn-warning command-delete\" data-row-id=\"" + id + "\">Slett</button>";
+    }
+
+    function addEmptyRow() {
+        var row = new Object({_id:""});
+        $("#admin-user-table").bootgrid('append', [row]);
+
+    }
+
+    function addUserRow(row) {
+        $("#admin-user-table").bootgrid('append', [row]);
+    }
+
+        function removeUserRow(id){
+        $("#admin-user-table").bootgrid('remove', [id]);
+
+    }
+
+    function commandDelete() {
+
+        var id = $(this).data("row-id");
+        var row = $(this).closest("tr");
+
+        if ($(this).hasClass("btn-danger")) {
+            deleteUser(id);
+            removeUserRow(id);
+        } else {
+            row.find(".command-cancel").attr("disabled", false);
+            $(this).toggleClass("btn-warning");
+            $(this).toggleClass("btn-danger");
+            row.find(".input").each(function () {
+                        $(this).toggleClass("delete");
+                    }
+            );
+        }
+
+    }
+
+
+    function commandCancel() {
+        var row = $(this).closest("tr")
+        var id = $(this).data("row-id");
+        if (id === "") {
+            removeUserRow(id)        } else {
+            var editButton = row.find(".command-edit");
+            row.find(".input").each(function () {
+                        $(this).removeClass("delete");
+                    }
+            );
+            row.find(".command-delete").addClass("btn-warning");
+            row.find(".command-delete").removeClass("btn-danger");
+            disableEdit(editButton, id, true);
+        }
+    }
+
+    function commandEdit() {
+        var active = $(this).attr("active");
+        var id = $(this).data("row-id");
+        if (active === "false") {
+            enableEdit($(this), id);
+
+        } else {
+            var row = $(this).closest("tr");
+            saveUser(row, id);
+            disableEdit($(this), id);
+
+        }
+    }
+
+    function enableEdit(editButton, id) {
+
+        var row = $(editButton).closest("tr");
+        row.find(".input").each(function () {
+                    $(this).data("oldValue", $(this).val());
+                    $(this).attr("disabled", false);
+                }
+        );
+
+        row.find(".command-cancel").attr("disabled", false);
+        editButton.text("Lagre").attr("active", true);
+
+    }
+
+    function disableEdit(editButton, id, cancel) {
+
+        var row = $(editButton).closest("tr");
+
+        row.find(".input").each(function () {
+                    if (cancel && $(this).data("oldValue")) {
+                        $(this).val($(this).data("oldValue"));
+                    }
+                    $(this).attr("disabled", true);
+
+                }
+        );
+
+        row.find(".command-cancel").attr("disabled", true);
+        editButton.text("Rediger").attr("active", false);
+
+    }
+
+    function readDataFromTable(row, id) {
+        var retval = new Object();
+        row.find(".input").each(function () {
+            retval[$(this).attr("label")] = $(this).val();
+        });
+        if (id !== "") {
+            retval._id = id;
+        }
+        console.log(retval);
+        return retval;
+    }
+
+    function saveUser(row, id) {
+        var user = readDataFromTable(row, id);
+        if (user._id) {
+            updateUser(user);
+            removeUserRow(user._id);
+            addUserRow(user);
+        } else {
+            createUser(user);
+        }
+    }
+
+
+    function updateUser(user) {
+        jQuery.ajax({
+            url: "/api/admin-users/" + user.id,
+            type: "PUT",
+            data: user,
+            success: function (data, textStatus, jqXHR) {
+                console.log("Update response:");
+                console.dir(data);
+                console.log(textStatus);
+                console.dir(jqXHR);
+            }
+
+        });
+    }
+
+    function createUser(user) {
+        jQuery.ajax({
+            url: "/api/admin-users/",
+            type: "POST",
+            data: user,
+            success: function (data, textStatus, jqXHR) {
+                console.log("Create response:");
+                console.dir(data);
+                console.log(textStatus);
+                console.dir(jqXHR);
+            }
+
+        });
+    }
+
+    function deleteUser(id) {
         jQuery.ajax({
             url: "/api/admin-users/" + id,
             type: "DELETE",
@@ -106,7 +259,6 @@
 
         });
     }
-
 
 
 </script>

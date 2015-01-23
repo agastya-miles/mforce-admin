@@ -3,6 +3,31 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+.edit {
+    background-color:#00B7FF;
+}
+
+.input {
+    background-color: inherit;
+    width: 100%;
+    border: none;
+}
+.input:enabled { background: white; border: inherit}
+
+.delete {
+    text-decoration: line-through;
+}
+
+.commands-class {
+    width:170px;
+    min-width:170px;
+}
+
+.command-edit {
+    width:60px;
+    min-width:60px;
+}
+
 a {
   color: #00B7FF;
 }

@@ -58,7 +58,8 @@ module.exports = function () {
     router.post('/api/admin-users', function (req, res) {
 
         var adminUser = new AdminUser({
-            email: req.body.email
+            email: req.body.email,
+            name: req.body.name
         });
 
         adminUser.save(function (err, user) {
