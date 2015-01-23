@@ -69,7 +69,7 @@
 
     $(document).ready(function () {
         console.log('LASTET');
-        $.get("/dblog", function (log) {
+        $.get("/api/dblog", function (log) {
             log.forEach( function(entry){
                 var result = template({entry: entry});
                 $("#dblog-table").prepend(result);

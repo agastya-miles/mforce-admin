@@ -1,6 +1,6 @@
 var schedule = require('node-schedule'),
-    config = require('../config.js').synchSchedule,
-    databaseController = require('../controllers/UpdateDatabaseController'),
+    config = require('../../../config.js').synchSchedule,
+    databaseController = require('./UpdateDatabaseController'),
     debug = require('debug')('cv-partner-admin'),
     DbLog = require('../models/dblog.model.js');
 

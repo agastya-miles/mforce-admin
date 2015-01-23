@@ -25,7 +25,8 @@ module.exports = function (app) {
     });
 
 
-    router.get('/dblog', function (req, res) {
+
+    router.get('/api/dblog', function (req, res) {
         DbLog.find({}, function (err, log) {
             res.json(log);
         });

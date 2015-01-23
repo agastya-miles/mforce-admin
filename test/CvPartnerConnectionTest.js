@@ -1,5 +1,5 @@
 var test = require('unit.js')
-var cvPartner = require('../controllers/CvPartnerConnection');
+var cvPartner = require('./CvPartnerConnection');
 
 
 var traverseUsers = function (i, users, handleUser, done, timeOut) {

@@ -2,9 +2,9 @@
  * Created by arvid on 16/12/14.
  */
 
-var cvPartner = require('../controllers/CvPartnerConnection'),
+var cvPartner = require('./CvPartnerConnection'),
     User = require('../models/user.model.js'),
-    database = require('../controllers/Database.js');
+    database = require('./Database.js');
 
 
 var traverseUsers = function (i, users, handleUser, done, timeOut) {

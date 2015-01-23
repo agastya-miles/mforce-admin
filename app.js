@@ -5,10 +5,10 @@ var express = require('express.io'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
-    scheduler = require('./controllers/UpdateDatabaseScheduler'),
+    scheduler = require('./api/js/controllers/UpdateDatabaseScheduler'),
     config = require('./config.js'),
     mongoose = require('mongoose'),
-    isAuthenticated = require('./controllers/auth.js');
+    isAuthenticated = require('./passport/auth.js');
 
 
 mongoose.connect(config.mongodb_uri, function (err) {
@@ -69,10 +69,10 @@ app.use('/', routes);
 
 app.all('*', isAuthenticated);
 
-var dbRoutes = require('./routes/dbroutes.js')(app);
+var dbRoutes = require('./api/js/routes/dbroutes.js')(app);
 app.use('/', dbRoutes);
 
-var adminRoutes = require('./routes/adminroutes.js')();
+var adminRoutes = require('./api/js/routes/adminroutes.js')();
 app.use('/', adminRoutes);
 
 /// catch 404 and forward to error handler

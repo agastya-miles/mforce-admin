@@ -1,8 +1,8 @@
 var test = require('unit.js')
-var databaseController = require('../controllers/UpdateDatabaseController');
-var database = require('../controllers/Database.js');
-var User = require('../models/user.model.js');
-var CV = require('../models/cv.model.js');
+var databaseController = require('./UpdateDatabaseController');
+var database = require('./Database.js');
+var User = require('./user.model.js');
+var CV = require('./cv.model.js');
 
 
 
