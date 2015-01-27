@@ -27,6 +27,8 @@ app.http().io()
 
 // view engine setup
 app.set('view engine', 'hbs');
+app.engine('html', require('ejs').renderFile);
+
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(logger('dev'));
@@ -63,11 +65,18 @@ app.use(flash());
 var initPassport = require('./passport/init');
 initPassport(passport);
 
+
 var routes = require('./routes/index')(passport);
 app.use('/', routes);
 
-
 app.all('*', isAuthenticated);
+
+
+/* GET Home Page */
+app.get('/', function (req, res) {
+    res.render('index.html');
+
+});
 
 var dbRoutes = require('./api/js/routes/dbroutes.js')(app);
 app.use('/', dbRoutes);

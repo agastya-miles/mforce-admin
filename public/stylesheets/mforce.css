@@ -1,0 +1,27 @@
+body {
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+.table-cell-label {
+    font-weight: normal;
+    width: 100%;
+}
+
+
+.editable-table {
+    table-layout : fixed;
+}
+
+label.editing{
+    display: none;
+}
+.table-cell-input {
+    width: 100%;
+}
+
+
+.navbar-default .navbar-brand {
+    color: #b8261c;
+
+}

@@ -8,24 +8,11 @@ var database = require('../controllers/Database.js'),
 
 module.exports = function (app) {
 
-    //router.get('/admin-users', function (req, res) {
-    //    AdminUsers.find({}, function (err, users) {
-    //        res.render('adminuser', {adminusers: users, adminuser_tab: true});
-    //
-    //    });
-    //});
-
-
     /* GET Home Page */
     router.get('/', function (req, res) {
-        DbLog.find({}, function (err, log) {
-            res.render('home', {logs: log, user: req.user, database_tab: true});
+        res.render('index.html');
 
-        });
     });
-
-
-
     router.get('/api/dblog', function (req, res) {
         DbLog.find({}, function (err, log) {
             res.json(log);
@@ -112,7 +99,8 @@ module.exports = function (app) {
                     function (cv, progress) {
                         req.io.emit('cv', {
                             message: cv,
-                            progress: progress
+                            progress: progress,
+                            finished: progress == 100
                         })
                     },
                     function () {
