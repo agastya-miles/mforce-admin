@@ -5,7 +5,7 @@ var NavigationBarBrand = React.createClass({
     render: function () {
         return (
             <div className="navbar-header">
-                <a className="navbar-brand" href="#">{this.props.children}</a>
+                <a className="navbar-brand" href="/">{this.props.children}</a>
             </div>);
     }
 });

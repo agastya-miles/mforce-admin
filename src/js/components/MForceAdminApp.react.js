@@ -1,4 +1,10 @@
 var React = require('react');
+
+
+var ReactRouter = require('react-router-component');
+var Locations = ReactRouter.Locations;
+var Location = ReactRouter.Location;
+var Link = ReactRouter.Link;
 var NavigationBar = require('./NavigationBar.react');
 var NavigationBarBrand = require('./NavigationBarBrand.react');
 var NavigationBarCollapse = require('./NavigationBarCollapse.react');
@@ -40,12 +46,14 @@ var MForceAdminApp = React.createClass({
                             <NavigationBarItem
                                 active={this.state.activeMenuItem === 'database'}
                                 id="database"
+                                href="/"
                                 onClick={this._onMenuClick}>
                                 Database
                             </NavigationBarItem>
 
                             <NavigationBarItem
                                 active={this.state.activeMenuItem === 'adminusers'}
+                                href="/adminusers"
                                 id="adminusers" onClick={this._onMenuClick} >
                                 Admin Users
                             </NavigationBarItem>
@@ -53,7 +61,7 @@ var MForceAdminApp = React.createClass({
                         </NavigationBarNav>
                     </NavigationBarCollapse>
                 </NavigationBar>
-            { activeView }
+            {activeView}
             </div >
         );
     },

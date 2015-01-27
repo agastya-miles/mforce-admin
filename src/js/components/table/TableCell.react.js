@@ -17,7 +17,8 @@ var TableCell = React.createClass({
 
     getInitialState: function() {
         return {
-            isEditing: false
+            isEditing: false,
+            value: this.props.value
         };
     },
 
@@ -27,8 +28,9 @@ var TableCell = React.createClass({
             input =
                 <TableCellTextInput
                     id={this.props.id}
-                    value={this.props.value}
+                    value={this.state.value}
                     onSave={this._onSave}
+                    onEscape={this._onEscape}
                 />;
         }
 
@@ -40,7 +42,7 @@ var TableCell = React.createClass({
                     'table-cell-label': true
                 })}
                     onDoubleClick={this._onDoubleClick}
-                >{this.props.value}</label>
+                >{this.state.value}</label>
             {input}
 
             </td>
@@ -57,7 +59,19 @@ var TableCell = React.createClass({
 
 
     _onSave: function(text) {
-        console.log(text);
+        this.setState({
+            isEditing: false,
+            value: text
+        });
+
+    },
+
+    _onEscape: function() {
+
+        this.setState({
+            isEditing: false,
+            value: this.props.value
+        });
 
     }
 });
