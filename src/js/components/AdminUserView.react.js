@@ -1,27 +1,29 @@
 var React = require('react');
+var Reflux = require("reflux");
 
-var AdminUserStore = require('../stores/AdminUserStore');
-var AdminUserActions = require('../actions/AdminUserActions');
-
+var AdminUserStore = require('../stores/AdminUserStore.reflux.js');
 var AdminUserRows = require('./AdminUserRow.react');
 
+var AdminUserActions = require('../actions/AdminUserActions.reflux.js');
 
-function getAdminViewState() {
-    return {adminUsers: AdminUserStore.getAll()};
+
+
+function getAdminViewState(){
+    return { adminUsers : AdminUserStore.getAll() };
 }
 
 var AdminUserView = React.createClass({
 
+    mixins: [Reflux.listenTo(AdminUserStore,"onStatusChange")],
+
+    onStatusChange: function (adminUsers) {
+        this.setState({
+            adminUsers: adminUsers
+        });
+    },
+
     getInitialState: function () {
         return getAdminViewState();
-    },
-
-    componentDidMount: function () {
-        AdminUserStore.addChangeListener(this._onChange);
-    },
-
-    componentWillUnmount: function () {
-        AdminUserStore.removeChangeListener(this._onChange);
     },
 
     render: function () {
@@ -37,7 +39,7 @@ var AdminUserView = React.createClass({
                 <button onClick={this._addRow} type="button" className="btn btn-default">
                     Add user
                 </button>
-                <table  className="editable-table  table table-condensed table-striped table-hover">
+                <table  className="editable-table table table-condensed table-striped table-hover">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -54,14 +56,12 @@ var AdminUserView = React.createClass({
         );
     },
 
+
     _addRow: function (e) {
         AdminUserActions.addRow();
 
-    },
-
-    _onChange: function (e) {
-        this.setState(getAdminViewState());
     }
+
 
 
 });

@@ -1,36 +1,38 @@
 var jQuery = require('jquery');
 var socket = io.connect();
 
-var DatabaseActions = require('../actions/DatabaseActionsIn');
-
 
 var DatabaseApi = Object.create({
 
 
-    load: function () {
-        jQuery.get("/api/dblog", function (dblog) {
-            DatabaseActions.load(dblog);
-        });
+    callback: function (data) {
+        console.log("Noop receved data");
+        console.log(data);
+
     },
 
-
-    init: function () {
+    registerCallBack: function (callback){
+        this.callback = callback;
+        var that = this;
         // Listen for the user event.
         socket.on('user', function (data) {
-            console.log(data);
-            DatabaseActions.userProgress(data);
+            that.callback.userProgress(data);
         });
         socket.on('cv', function (data) {
-            console.log(data);
-            DatabaseActions.cvProgress(data);
+            that.callback.cvProgress(data);
         });
         socket.on('deletedb', function (data) {
-            console.log(data);
-            DatabaseActions.deleteProgress(data);
+            that.callback.deleteProgress(data);
         });
-
-        this.load();
     },
+
+    load: function () {
+        var that = this;
+        jQuery.get("/api/dblog", function (dblog) {
+            that.callback.load(dblog);
+        });
+    },
+
 
     syncDatabase: function () {
         socket.emit('copydb');

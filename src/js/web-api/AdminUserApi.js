@@ -1,15 +1,24 @@
 var jQuery = require('jquery');
-var AdminUserActions = require('../actions/AdminUserActions');
+
+
 
 
 var AdminUserApi = Object.create ({
 
-     load : function (){
+
+    onLoaded: function (callback){
+        this.callback = callback;
+    },
+
+    load : function (){
+        var callback = this.callback;
          jQuery.get("/api/admin-users", function (adminUsers) {
-             AdminUserActions.load(adminUsers);
+
+             if ( callback ){
+                 callback(adminUsers);
+             }
          });
     }
-
 
 });
 

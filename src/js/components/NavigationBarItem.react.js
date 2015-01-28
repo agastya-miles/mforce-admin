@@ -15,7 +15,7 @@ var NavigationBarItem = React.createClass({
             className={cx({
                 'active': this.props.active
             })}>
-            <a id={this.props.id} onClick={this.props.onClick } href="javascript:;">{this.props.children}</a>
+            <a id={this.props.id} onClick={this.props.onClick } href={this.props.href }>{this.props.children}</a>
         </li>
         );
     }

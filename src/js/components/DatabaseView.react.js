@@ -1,7 +1,8 @@
 var React = require('react');
+var Reflux = require("reflux");
 
-var DatabaseActions = require('../actions/DatabaseActions');
-var DatabaseStore = require('../stores/DatabaseStore');
+var DatabaseActions = require('../actions/DatabaseActions.reflux');
+var DatabaseStore = require('../stores/DatabaseStore.reflux.js');
 var DatabaseLogTable = require('./DatabaseLogTable.react');
 
 
@@ -21,12 +22,11 @@ var DatabaseView = React.createClass({
         return getDatabaseViewState();
     },
 
-    componentDidMount: function () {
-        DatabaseStore.addChangeListener(this._onChange);
-    },
+    mixins: [Reflux.listenTo(DatabaseStore,"onStatusChange")],
 
-    componentWillUnmount: function () {
-        DatabaseStore.removeChangeListener(this._onChange);
+    onStatusChange: function (data) {
+        console.log("data");
+        this.setState( getDatabaseViewState() );
     },
 
     render: function () {
@@ -55,7 +55,7 @@ var DatabaseView = React.createClass({
     },
 
     _syncDatabase: function () {
-        DatabaseActions.resyncDatabase();
+        DatabaseActions.syncDatabase();
     },
 
     _deleteDatabase: function () {

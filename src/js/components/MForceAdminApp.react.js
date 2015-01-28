@@ -12,13 +12,8 @@ var NavigationBarNav = require('./NavigationBarNav.react');
 var NavigationBarItem = require('./NavigationBarItem.react');
 var DatabaseView = require('./DatabaseView.react');
 var AdminUserView = require('./AdminUserView.react');
-var AdminUserApi = require('../web-api/AdminUserApi');
-var DatabaseApi = require('../web-api/DatabaseApi');
 
 
-
-var load = AdminUserApi.load();
-var int = DatabaseApi.init();
 
 var MForceAdminApp = React.createClass({
 

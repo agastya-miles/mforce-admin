@@ -58,6 +58,7 @@ app.use(passport.session());
 
 // Using the flash middleware provided by connect-flash to store messages in session
 // and displaying in templates
+
 var flash = require('connect-flash');
 app.use(flash());
 
@@ -84,12 +85,17 @@ app.use('/', dbRoutes);
 var adminRoutes = require('./api/js/routes/adminroutes.js')();
 app.use('/', adminRoutes);
 
+
+
 /// catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
+
+
+
 
 // development error handler
 // will print stacktrace
