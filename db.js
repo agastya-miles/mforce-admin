@@ -1,5 +1,5 @@
 module.exports = {
-  'url' : 'mongodb://miles_user:miles_password@ds047030.mongolab.com:47030/heroku_app30746985',
+  'url' : 'mongodb://heroku_app32654391:ncei0hc4bj8ln9t8d60gdufa52@ds027521.mongolab.com:27521/heroku_app32654391',
   'testurl' : 'mongodb://localhost/cvpartner_test'
 
 }
