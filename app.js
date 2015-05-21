@@ -41,7 +41,11 @@ app.use(require('./heroku-ssl-redirect.io')());
 var passport = require('passport');
 var expressSession = require('express-session');
 // TODO - Why Do we need this key ?
-app.use(expressSession({secret: 'ajshdgfjahsdgfkjashgf'}));
+app.use(expressSession({
+    secret: 'ajshdgfjahsdgfkjashgf',
+    saveUninitialized: true,
+    resave: true
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
