@@ -1,8 +1,12 @@
 # Build
 node_modules
+*.log
 
 # IntelliJ IDEA
 .idea
 *.iml
 *.ipr
 *.iws
+
+# OSX
+.DS_Store
