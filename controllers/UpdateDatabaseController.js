@@ -57,25 +57,28 @@ var databaseController = {
                             if (err) {
                                 console.error("Copy CV:" + err)
                             } else {
-                                database.saveCvs(cvs, function (err) {
+                                cvPartner.getHistory(userId, cvId, function(err, history) {
                                     if (err)
-                                        throw err;
-                                    handleCv(cvs.navn, (100 - numberOfUsersLeft * 100 / users.length));
+                                        console.error("Copy history: " + err);
+                                    else
+                                        cvs.history = history;
 
-
+                                    database.saveCvs(cvs, function (err) {
+                                        if (err)
+                                            throw err;
+                                        handleCv(cvs.navn, (100 - numberOfUsersLeft * 100 / users.length));
+                                    });
                                 });
                             }
                             if (--numberOfUsersLeft == 0) {
                                 done();
                             }
-
-
                         });
                     },
                     function () {
 
 
-                    }, 5);
+                    }, 3100);
             });
     }
 

@@ -45,12 +45,30 @@ var cvPartnerConnection = {
                     done(null, JSON.parse(str));
                 });
             } else {
-                done("status:" + response.statusCode + " URL: " + options.path ,null);
+                done("status: " + response.statusCode + " URL: " + options.path, null);
             }
 
 
         }).end()
+    },
 
+    getHistory: function(userId, cvId, done) {
+        options.path = '/api/v1/history/' + userId + '/' + cvId;
+        http.request(options, function (response) {
+            var str = '';
+
+            if (response.statusCode === 200) {
+                response.on('data', function(chunk) {
+                    str += chunk;
+                });
+
+                response.on('end', function() {
+                    done(null, JSON.parse(str));
+                });
+            } else {
+                done("status: " + response.statusCode + " URL: " + options.path, null);
+            }
+        }).end();
     }
 };
 
