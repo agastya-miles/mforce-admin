@@ -14,7 +14,7 @@ var options = {
 
 var cvPartnerConnection = {
     getUsers: function (done) {
-        options.path = '/api/v1/users';
+        options.path = '/api/v1/users?limit=1000';
         http.request(options, function (response) {
             var str = '';
 
