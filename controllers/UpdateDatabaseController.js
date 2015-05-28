@@ -4,7 +4,8 @@
 
 var cvPartner = require('../controllers/CvPartnerConnection'),
     User = require('../models/user.model.js'),
-    database = require('../controllers/Database.js');
+    database = require('../controllers/Database.js'),
+    _ = require('underscore');
 
 
 var traverseUsers = function (i, users, handleUser, done, timeOut) {
@@ -21,6 +22,27 @@ var traverseUsers = function (i, users, handleUser, done, timeOut) {
 
 };
 
+var markInactiveUsers = function (activeUsers) {
+    User.find()
+        .select('name')
+        .exec(function (err, localUsers) {
+            var activeUserNames = _.map(activeUsers, function (obj) {
+                return obj.name.trim();
+            });
+
+            _.each(localUsers, function (user) {
+                if (!_.contains(activeUserNames, user.name.trim())) {
+                    user.update({status: 3}, function (err, raw) {
+                        if (err) {
+                            console.log("Marking user as inactive: error: " + err + ", response: " + raw);
+                        }
+                        console.log("Marked user '" + user.name + "' as inactive");
+                    });
+                }
+            });
+        });
+};
+
 var databaseController = {
 
     copyUsers: function (handleUser, done) {
@@ -29,6 +51,8 @@ var databaseController = {
         cvPartner.getUsers(function (err, users) {
             if (err)
                 throw err;
+
+            markInactiveUsers(users);
 
             var numberOfUsersLeft = users.length;
             users.forEach(function (user) {
