@@ -32,12 +32,7 @@ var markInactiveUsers = function (activeUsers) {
 
             _.each(localUsers, function (user) {
                 if (!_.contains(activeUserNames, user.name.trim())) {
-                    user.update({status: 3}, function (err, raw) {
-                        if (err) {
-                            console.log("Marking user as inactive: error: " + err + ", response: " + raw);
-                        }
-                        console.log("Marked user '" + user.name + "' as inactive");
-                    });
+                   user.remove({'_id' : user._id });
                 }
             });
         });
