@@ -15,7 +15,7 @@ module.exports = function (passport) {
             var user = {};
             user.email = profile._json.email;
             user.name = profile._json.name;
-            if (user.email.match(/.*@miles.no/)) {
+            if (user.email.match(/.*@miles.no/) || user.email.match(/.*@miles.in/)) {
                 return done(null, user);
             }
 
