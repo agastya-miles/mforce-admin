@@ -99,7 +99,14 @@ if (app.get('env') === 'development') {
 }
 
 
+//Cron will initiate a job which will synch cvpartner databse at 03:00 AM.
+var cronJob = require('cron').CronJob;
 
+var cronJ = new cronJob("00 00 03 * * *", function() {
+
+    scheduler.autoUpdateDBscheduler();
+
+},null, true);
 
 
 module.exports = app;
