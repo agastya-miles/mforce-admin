@@ -4,6 +4,7 @@
 
 var cvPartner = require('../controllers/CvPartnerConnection'),
     User = require('../models/user.model.js'),
+    cv = require('../models/cv.model.js'),
     database = require('../controllers/Database.js'),
     _ = require('underscore');
 
@@ -24,7 +25,7 @@ var traverseUsers = function (i, users, handleUser, done, timeOut) {
 
 var markInactiveUsers = function (activeUsers) {
     User.find()
-        .select('name')
+        .select('name _id')
         .exec(function (err, localUsers) {
             var activeUserNames = _.map(activeUsers, function (obj) {
                 return obj.name.trim();
@@ -32,7 +33,20 @@ var markInactiveUsers = function (activeUsers) {
 
             _.each(localUsers, function (user) {
                 if (!_.contains(activeUserNames, user.name.trim())) {
-                   user.remove({'_id' : user._id });
+                    user.remove({ _id: user._id}, function (err) {
+                        if(err){
+                        console.log('err : '+err);
+                        }else{
+                            console.log('Deleted User from users : '+user.name);
+                        }
+                    });
+                    cv.remove({ bruker_id: user._id}, function (err) {
+                        if(err){
+                            console.log('err : '+err);
+                        }else{
+                            console.log('Deleted User from cvs : '+user.name);
+                        }
+                    });
                 }
             });
         });
@@ -85,6 +99,7 @@ var databaseController = {
                                     database.saveCvs(cvs, function (err) {
                                         if (err)
                                             throw err;
+                                        console.log("cvs  :"+cvs);
                                         handleCv(cvs.navn, (100 - numberOfUsersLeft * 100 / users.length));
                                     });
                                 });
