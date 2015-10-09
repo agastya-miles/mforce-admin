@@ -5,7 +5,7 @@ var schedule = require('node-schedule'),
     DbLog = require('../models/dblog.model.js');
 
 
-schedule.scheduleJob(config, function () {
+/*schedule.scheduleJob(config, function () {
     console.log('Start schedule database syncronization');
 
     databaseController.copyUsers(
@@ -40,7 +40,7 @@ schedule.scheduleJob(config, function () {
                     });
                 });
         });
-});
+});*/
 
 //cron will call this method to synch cvpartner database at given time schedule.
 function autoUpdateDBscheduler(){

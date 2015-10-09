@@ -99,7 +99,6 @@ var databaseController = {
                                     database.saveCvs(cvs, function (err) {
                                         if (err)
                                             throw err;
-                                        console.log("cvs  :"+cvs);
                                         handleCv(cvs.navn, (100 - numberOfUsersLeft * 100 / users.length));
                                     });
                                 });
