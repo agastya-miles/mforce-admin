@@ -23,6 +23,24 @@ var traverseUsers = function (i, users, handleUser, done, timeOut) {
 
 };
 
+var removeUsers = function (id,name) {
+    User.remove({ _id: id}, function (err) {
+        if(err){
+            console.log('err : '+err);
+        }else{
+            console.log('Deleted User from users : '+name);
+        }
+    });
+
+    cv.remove({ bruker_id: id}, function (err) {
+        if(err){
+            console.log('err : '+err);
+        }else{
+            console.log('Deleted User from cvs : '+name);
+        }
+    });
+};
+
 var markInactiveUsers = function (activeUsers) {
     User.find()
         .select('name _id')
@@ -31,22 +49,19 @@ var markInactiveUsers = function (activeUsers) {
                 return obj.name.trim();
             });
 
-            _.each(localUsers, function (user) {
-                if (!_.contains(activeUserNames, user.name.trim())) {
-                    user.remove({ _id: user._id}, function (err) {
-                        if(err){
-                        console.log('err : '+err);
-                        }else{
-                            console.log('Deleted User from users : '+user.name);
-                        }
-                    });
-                    cv.remove({ bruker_id: user._id}, function (err) {
-                        if(err){
-                            console.log('err : '+err);
-                        }else{
-                            console.log('Deleted User from cvs : '+user.name);
-                        }
-                    });
+            var listNonConsultants = [];
+            if (process.env.LIST_NON_CONSULTANTS && process.env.LIST_NON_CONSULTANTS != null) {
+                listNonConsultants = process.env.LIST_NON_CONSULTANTS.split(",");
+
+                for(i = 0; i < listNonConsultants.length; i++) {
+                    listNonConsultants[i]=listNonConsultants[i].replace(/[^A-NP-Z0-9]+/ig,"").toLowerCase();
+                }
+            }
+
+            _.each(localUsers,function (user) {
+                if (!_.contains(activeUserNames, user.name.trim())
+                            || (listNonConsultants.indexOf(user.name.replace(/[^A-NP-Z0-9]+/ig,"").toLowerCase()) > -1)) {
+                    removeUsers(user._id,user.name);
                 }
             });
         });
