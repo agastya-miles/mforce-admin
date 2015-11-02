@@ -98,6 +98,7 @@ var databaseController = {
             .select('user_id  default_cv_id')
             .lean()
             .exec(function (err, users) {
+
                 var masterIndustryArray=[];
                 cvPartner.getProjectExpMasterData(function(err,indus){
                     indus.forEach(function(ind) {

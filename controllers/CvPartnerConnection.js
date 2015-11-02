@@ -74,6 +74,7 @@ var cvPartnerConnection = {
     // CV Partner api call to fetch set of industries with
     // their regional (no) and international (int) counterparts
     // Sample payload
+
     // [{ "_id":"560a909a69702d2a9b00015a", "id":"560a909a69702d2a9b00015a", "section_type":"project_experiences", "field_name":"industry", "values":{ "no":"Energi, olje \u0026 gass"}, "category_ids":[]}]
     getProjectExpMasterData: function (done) {
         var options = {
