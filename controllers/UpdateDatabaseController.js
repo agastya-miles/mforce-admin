@@ -98,6 +98,15 @@ var databaseController = {
             .select('user_id  default_cv_id')
             .lean()
             .exec(function (err, users) {
+                var masterIndustryArray=[];
+                cvPartner.getProjectExpMasterData(function(err,indus){
+                    indus.forEach(function(ind) {
+                        var masterIndustry={};
+                        masterIndustry.no=ind.values.no;
+                        masterIndustry.int=ind.values.int;
+                        masterIndustryArray.push(masterIndustry);
+                    });
+                });
                 var numberOfUsersLeft = users.length;
                 traverseUsers(0, users,
                     function (userId, cvId) {
@@ -108,9 +117,16 @@ var databaseController = {
                                 cvPartner.getHistory(userId, cvId, function(err, history) {
                                     if (err)
                                         console.error("Copy history: " + err);
-                                    else
+                                    else {
                                         cvs.history = history;
-
+                                        cvs.project_experiences.forEach(function(project){
+                                            masterIndustryArray.forEach(function(mia){
+                                                if((project.industry == mia.no || project.industry == mia.int) && mia.int != null ){
+                                                    project.industry= mia.int;
+                                                }
+                                            });
+                                        });
+                                    }
                                     database.saveCvs(cvs, function (err) {
                                         if (err)
                                             throw err;
