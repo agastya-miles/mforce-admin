@@ -8,7 +8,8 @@ var express = require('express.io'),
     scheduler = require('./controllers/UpdateDatabaseScheduler'),
     config = require('./config.js'),
     mongoose = require('mongoose'),
-    isAuthenticated = require('./controllers/auth.js');
+    isAuthenticated = require('./controllers/auth.js'),
+    SFController = require('./controllers/SFController');
 
 
 mongoose.connect(config.mongodb_uri, function (err) {
@@ -105,6 +106,7 @@ var cronJob = require('cron').CronJob;
 var cronJ = new cronJob("00 00 03 * * *", function() {
 
     scheduler.autoUpdateDBscheduler();
+    SFController.autoUpdateOpportunity();
 
 },null, true);
 

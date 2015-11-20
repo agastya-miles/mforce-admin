@@ -4,7 +4,8 @@ var router = express.Router();
 var database = require('../controllers/Database.js'),
     databaseController = require('../controllers/UpdateDatabaseController'),
     AdminUsers = require('../models/adminuser.model.js'),
-    DbLog = require('../models/dblog.model.js');
+    DbLog = require('../models/dblog.model.js'),
+    SFController = require('../controllers/SFController');
 
 module.exports = function (app) {
 
@@ -78,6 +79,26 @@ module.exports = function (app) {
         });
     });
 
+    app.io.route('delete_opportunity',function(req){
+        database.dropAllOpportunity(function(err){
+            var dbLog = new DbLog({
+                when: new Date(),
+                what: 'All Opportunities deleted',
+                comment: 'Manually'
+            });
+            dbLog.save(function (err) {
+                if (err)
+                    console.log(err);
+            });
+
+            console.log('dropAllOpportunity OK');
+            req.io.emit('delete_opportunity', {
+                message: 'dropAllOpportunity finished',
+                progress: 100,
+                finished: true
+            });
+        });
+    });
 
     app.io.route('copydb', function (req) {
 
@@ -136,7 +157,32 @@ module.exports = function (app) {
     });
 
 
+    app.io.route('syncSF',function(req){
+        console.log('SalesForce sync operation Started...........');
+        SFController.syncOpportunities(function(opportunity, progress){
+            req.io.emit('opportunity', {
+                message: opportunity,
+                progress: progress
+            });
+        },function(err){
+            var dbLog = new DbLog({
+                when: new Date(),
+                what: 'All SalesForce opportunities copied',
+                comment: 'Manually'
+            });
+            dbLog.save(function (err) {
+                if (err)
+                    console.log(err);
+                else
+                    console.log('SalesForce sync operation is completed!');
+            });
+            req.io.emit('opportunity', {
+                message: 'syncSF Finished',
+                progress: 100,
+                finished: true
+            });
+        });
+    });
+
     return router;
-
-
 };

@@ -34,6 +34,33 @@
         </div>
 
     </div>
+
+    <div class="col-md-2"></div>
+
+    <div class="col-md-6 well well-lg">
+        <button onclick="syncSalesForceDatabase()" type="button" class="btn btn-primary">
+            Synkroniser SalesForce database
+        </button>
+        <div class="progress">
+            <div id="progress_opportunity" class="progress-bar" role="progressbar" aria-valuenow="0"
+                 aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                <span class="sr-only">10% Complete</span>
+            </div>
+        </div>
+
+        <div>&nbsp;</div>
+
+        <button onclick="deleteSalesForceDatabase()" type="button" class="btn btn-primary">
+            Slett SalesForce database
+        </button>
+        <div class="progress">
+            <div id="progress_delete_opportunity" class="progress-bar" role="progressbar" aria-valuenow="0"
+                 aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                <span class="sr-only">10% Complete</span>
+            </div>
+        </div>
+
+    </div>
     <div >
         <table class="table table-bordered table-condensed table-hover table-striped apply-bootgrid">
             <thead>
@@ -103,6 +130,16 @@
 
     });
 
+    io.on('opportunity', function (data) {
+        console.log(data);
+        setProgress('opportunity', data.progress);
+
+        if (data.finished) {
+            setProgressClass('opportunity', 'progress-bar progress-bar-success');
+        }
+
+    });
+
     io.on('deletedb', function (data) {
         console.log(data);
         setProgress('deletedb', data.progress);
@@ -111,6 +148,15 @@
             setProgressClass('deletedb', 'progress-bar progress-bar-success');
         }
 
+    });
+
+    io.on('delete_opportunity',function (data) {
+        console.log(data);
+        setProgress('delete_opportunity', data.progress);
+
+        if (data.finished) {
+            setProgressClass('delete_opportunity', 'progress-bar progress-bar-success');
+        }
     });
 
     function syncDatabase() {
@@ -122,10 +168,23 @@
         io.emit('copydb');
     }
 
+    function syncSalesForceDatabase() {
+        setProgress('opportunity', 0);
+        setProgressClass('opportunity', 'progress-bar');
+
+        io.emit('syncSF');
+    }
+
     function deleteDatabase() {
         setProgress('deletedb', 0);
         setProgressClass('deletedb', 'progress-bar');
         io.emit('deletedb');
+    }
+
+    function deleteSalesForceDatabase() {
+        setProgress('delete_opportunity', 0);
+        setProgressClass('delete_opportunity', 'progress-bar');
+        io.emit('delete_opportunity');
     }
 
     function setProgressClass(id, clazz) {

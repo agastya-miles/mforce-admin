@@ -3,7 +3,8 @@
  */
 var mongoose = require('mongoose'),
     User = require('../models/user.model.js'),
-    CV = require('../models/cv.model.js');
+    CV = require('../models/cv.model.js'),
+    Opportunity = require('../models/sfOpportunity.model.js');
 
 var database = {
 
@@ -26,7 +27,6 @@ var database = {
     },
 
     saveUser : function( user,  done) {
-
         mongoose.connection.collections['users'].save(user, function (err) {
             done(err);
         });
@@ -36,9 +36,19 @@ var database = {
         mongoose.connection.collections['cvs'].save(cvs, function (err) {
             done(err);
         });
+    },
+
+    saveOpportunities : function(opportunities, callback){
+        mongoose.connection.collections['sfOpportunity'].save(opportunities, function (err) {
+            callback(err);
+        });
+    },
+
+    dropAllOpportunity : function(callback){
+        mongoose.connection.collections['sfOpportunity'].drop(function (err) {
+            callback(err);
+        });
     }
-
-
 };
 
 module.exports = database;
