@@ -1,6 +1,7 @@
 var express = require('express'),
     router = express.Router(),
     AdminUser = require('../models/adminuser.model.js');
+    userTagController =require('../controllers/userTagController');
 
 
 module.exports = function () {
@@ -12,6 +13,13 @@ module.exports = function () {
         });
     });
 
+    router.get('/admin-uploadusertags', function (req, res) {
+        return userTagController.uploadUserTags(req, res);
+    });
+
+    router.post('/admin-saveusertags', function (req, res) {
+        return userTagController.saveUserTags(req, res);
+    });
 
     router.get('/api/admin-users/:id', function (req, res) {
         console.log(req.params.id);
