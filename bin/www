@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+require('dotenv').load();
 
 var debug = require('debug')('cv-partner-admin');
 var app = require('../app');

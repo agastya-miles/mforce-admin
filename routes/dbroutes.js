@@ -5,7 +5,7 @@ var database = require('../controllers/Database.js'),
     databaseController = require('../controllers/UpdateDatabaseController'),
     AdminUsers = require('../models/adminuser.model.js'),
     DbLog = require('../models/dblog.model.js'),
-    SFController = require('../controllers/SFController');
+    SFController = require('../controllers/sfController');
 
 module.exports = function (app) {
 

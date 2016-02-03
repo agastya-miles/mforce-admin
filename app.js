@@ -9,7 +9,7 @@ var express = require('express.io'),
     config = require('./config.js'),
     mongoose = require('mongoose'),
     isAuthenticated = require('./controllers/auth.js'),
-    SFController = require('./controllers/SFController');
+    SFController = require('./controllers/sfController');
 
 
 mongoose.connect(config.mongodb_uri, function (err) {
