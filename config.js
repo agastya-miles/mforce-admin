@@ -19,7 +19,7 @@ function getConfig() {
                     loginUrl: 'https://eu1.salesforce.com', //'https://ap2.salesforce.com',
                     userName: 'prashant.bakshi@miles.in', //'mithun.ganatra@miles.in',
                     password: 'miles123', //'Asdf1234',
-                    accessToken: 'eGTtg6HzSM0LA0MGjCofDxxU', //'moy8VY3vf0cjwLLiD7qnEApsH',
+                    accessToken: 'ffdxAriXVrPmQtan0AQAOc4zP', //'moy8VY3vf0cjwLLiD7qnEApsH',
                     sfAutoSyncEnabled: true
                 }
             };
@@ -39,7 +39,7 @@ function getConfig() {
                     loginUrl: 'https://eu1.salesforce.com',
                     userName: 'prashant.bakshi@miles.in',
                     password: 'miles123',
-                    accessToken: 'eGTtg6HzSM0LA0MGjCofDxxU',
+                    accessToken: 'ffdxAriXVrPmQtan0AQAOc4zP',
                     sfAutoSyncEnabled: true
                 }
             };

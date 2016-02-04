@@ -10,6 +10,7 @@ var express = require('express.io'),
     mongoose = require('mongoose'),
     isAuthenticated = require('./controllers/auth.js'),
     SFController = require('./controllers/sfController');
+    moment = require('moment');
 
 
 mongoose.connect(config.mongodb_uri, function (err) {
@@ -103,8 +104,8 @@ if (app.get('env') === 'development') {
 //Cron will initiate a job which will synch cvpartner databse at 03:00 AM.
 var cronJob = require('cron').CronJob;
 
-var cronJ = new cronJob("00 00 03 * * *", function() {
-
+var cronJ = new cronJob("00 40 11 * * *", function() {
+    console.log("autoUpdateDBscheduler started @  :   "+moment(new Date()).format("DD-MM-YYYY HH:mm:ss"));
     scheduler.autoUpdateDBscheduler();
     SFController.autoUpdateOpportunity();
 
