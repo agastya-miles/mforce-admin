@@ -109,7 +109,7 @@ var cronJ = new cronJob("00 00 03 * * *", function() {
     scheduler.autoUpdateDBscheduler();
     SFController.autoUpdateOpportunity();
 
-},null,true,'Europe/Oslo');
+},null,true);
 
 
 module.exports = app;
