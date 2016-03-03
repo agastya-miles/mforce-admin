@@ -9,19 +9,19 @@ var cvPartner = require('../controllers/CvPartnerConnection'),
     _ = require('underscore');
 
 
-var traverseUsers = function (i, users, handleUser, done, timeOut) {
+var traverseUsers = function (i, users, masterIndustryArray, handleUser, done, timeOut) {
 
     setTimeout(function () {
         if (i < users.length) {
             var user = users[i];
             handleUser(user.user_id, user.default_cv_id);
-            traverseUsers(++i, users, handleUser, done, timeOut);
+            traverseUsers(++i, users,masterIndustryArray, handleUser, done, timeOut);
         } else {
             done();
         }
     }, timeOut);
 
-};
+}
 
 var removeUsers = function (id,name) {
     User.remove({ _id: id}, function (err) {
@@ -29,14 +29,13 @@ var removeUsers = function (id,name) {
             console.log('err : '+err);
         }else{
             console.log('Deleted User from users : '+name);
-        }
-    });
-
-    cv.remove({ bruker_id: id}, function (err) {
-        if(err){
-            console.log('err : '+err);
-        }else{
-            console.log('Deleted User from cvs : '+name);
+            cv.remove({ bruker_id: id}, function (err) {
+                if(err){
+                    console.log('err : '+err);
+                }else{
+                    console.log('Deleted User from cvs : '+name);
+                }
+            });
         }
     });
 };
@@ -98,22 +97,20 @@ var databaseController = {
             .select('user_id  default_cv_id')
             .lean()
             .exec(function (err, users) {
-
-                var masterIndustryArray=[];
                 cvPartner.getProjectExpMasterData(function(err,indus){
+                    var masterIndustryArray=[];
                     indus.forEach(function(ind) {
                         var masterIndustry={};
                         masterIndustry.no=ind.values.no;
                         masterIndustry.int=ind.values.int;
                         masterIndustryArray.push(masterIndustry);
                     });
-                });
                 var numberOfUsersLeft = users.length;
-                traverseUsers(0, users,
+                traverseUsers(0, users, masterIndustryArray,
                     function (userId, cvId) {
                         cvPartner.getCvs(userId, cvId, function (err, cvs) {
                             if (err) {
-                                console.error("Copy CV:" + err)
+                                console.error("Copy CV:" + err);
                             } else {
                                 cvPartner.getHistory(userId, cvId, function(err, history) {
                                     if (err)
@@ -122,7 +119,10 @@ var databaseController = {
                                         cvs.history = history;
                                         cvs.project_experiences.forEach(function(project){
                                             masterIndustryArray.forEach(function(mia){
-                                                if((project.industry == mia.no || project.industry == mia.int) && mia.int != null ){
+                                                var projectIndustry = project.industry?(project.industry).trim().toUpperCase():project.industry;
+                                                var miaIndustryNo = mia.no?(mia.no).trim().toUpperCase():mia.no;
+                                                var miaIndustryInt = mia.int?(mia.int).trim().toUpperCase():mia.int;
+                                                if(projectIndustry && miaIndustryNo && miaIndustryInt && (projectIndustry == miaIndustryNo || projectIndustry == miaIndustryInt) && miaIndustryInt != null){
                                                     project.industry= mia.int;
                                                 }
                                             });
@@ -142,8 +142,8 @@ var databaseController = {
                     },
                     function () {
 
-
-                    }, 3100);
+                    }, 5000);
+                });
             });
     }
 
