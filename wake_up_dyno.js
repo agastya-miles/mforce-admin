@@ -4,7 +4,7 @@ console.log("*******Wake_up_dyno Entry....");
 var options = {
     host: 'cvpartner-admin.herokuapp.com',
     port: 80,
-    path: '/'
+    path: '/js/bootgrid/jquery.bootgrid.js'
 };
 console.log("======WAKUP DYNO START");
 http.get(options, function(res) {
