@@ -1,3 +1,4 @@
+//Heroapp scheduler calls this script that sends a request just before trggering auto DB scheduler to awake heroku app dyno.
 var http = require('http'); //importing http
 console.log("*******Wake_up_dyno Entry....");
 var options = {

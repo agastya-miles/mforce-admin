@@ -104,7 +104,7 @@ if (app.get('env') === 'development') {
 //Cron will initiate a job which will synch cvpartner databse at 03:00 AM.
 var cronJob = require('cron').CronJob;
 
-var cronJ = new cronJob("00 05 03 * * *", function() {
+var cronJ = new cronJob("00 32 04 * * *", function() {
     console.log("autoUpdateDBscheduler started @  :   "+moment(new Date()).format("DD-MM-YYYY HH:mm:ss"));
     scheduler.autoUpdateDBscheduler();
     SFController.autoUpdateOpportunity();
