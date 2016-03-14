@@ -17,9 +17,9 @@ function getConfig() {
                 },
                 sfAuth:{
                     loginUrl: 'https://eu1.salesforce.com', //'https://ap2.salesforce.com',
-                    userName: 'kjartan.juvik@miles.no', //'mithun.ganatra@miles.in',
-                    password: 'S567haka', //'Asdf1234',
-                    accessToken: 'xQNuOeTcR50AvbSHQSVNbFsbW', //'moy8VY3vf0cjwLLiD7qnEApsH',
+                    userName: 'prashant.bakshi@miles.in', //'mithun.ganatra@miles.in',
+                    password: 'miles123', //'Asdf1234',
+                    accessToken: 'ffdxAriXVrPmQtan0AQAOc4zP', //'moy8VY3vf0cjwLLiD7qnEApsH',
                     sfAutoSyncEnabled: true
                 }
             };
