@@ -37,9 +37,9 @@ function getConfig() {
                 },
                 sfAuth:{
                     loginUrl: 'https://eu1.salesforce.com',
-                    userName: 'prashant.bakshi@miles.in',
-                    password: 'miles123',
-                    accessToken: 'ffdxAriXVrPmQtan0AQAOc4zP',
+                    userName: 'kjartan.juvik@miles.no',
+                    password: 'S567haka',
+                    accessToken: 'xQNuOeTcR50AvbSHQSVNbFsbW',
                     sfAutoSyncEnabled: true
                 }
             };
