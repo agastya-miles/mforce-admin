@@ -3,7 +3,7 @@ var http = require('http'); //importing http
 var options = {
     host: 'cvpartner-admin.herokuapp.com',
     port: 80,
-    path: '/js/Mforce-admin/usertag.js'
+    path: '/'
 };
 console.log("======WAKUP DYNO START=====");
 http.get(options, function(res) {
